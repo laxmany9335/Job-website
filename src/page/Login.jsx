@@ -1,24 +1,23 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Box, Grid, Typography, Button, Divider } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
-import AppleIcon from '@mui/icons-material/Apple';
 import { Facebook } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import logo from "../Assests/loginlogo.png";
 import logo2 from "../Assests/logoImage.jpg";
 import InputField from "../component/InputField";
 import ButtonBox from "../component/ButtonBox";
-import axios from "axios";
+import { BiSolidHide } from "react-icons/bi";
+import { AiOutlineEye } from "react-icons/ai";
+import { IoIosUnlock } from "react-icons/io";
+
 
 function Login() {
-  const [inputValue, setInputValue] = useState({ mobileOrEmail: "" });
-  const [showOTPField, setShowOTPField] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", "", ""]);
-  const [resendTimer, setResendTimer] = useState(0);
-  const otpRefs = useRef(Array(5).fill(null));
+  const [inputValue, setInputValue] = useState({ mobileOrEmail: "", password: "" });
+  const [showPassword, setPassword] = useState(false);
 
   const handleInputChange = (e) => {
-    setInputValue({ ...inputValue, mobileOrEmail: e.target.value });
+    setInputValue({ ...inputValue, [e.target.name]: e.target.value });
   };
 
   const isValidInput = () => {
@@ -27,94 +26,12 @@ function Login() {
     return phoneRegex.test(inputValue.mobileOrEmail) || emailRegex.test(inputValue.mobileOrEmail);
   };
 
-
-  const handleSendOTP = async () => {
-    if (!isValidInput()) return;
-
-    try {
-      const response = await axios.post("https://your-api.com/send-otp", {
-        mobileOrEmail: inputValue.mobileOrEmail,
-      });
-
-      if (response.data.success) {
-        setShowOTPField(true);
-        setResendTimer(60);
-        startResendTimer();
-      } else {
-        console.error("Failed to send OTP:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error sending OTP:", error);
-    }
-  };
-
-  const handleResendOTP = async () => {
-    try {
-      const response = await axios.post("https://your-api.com/resend-otp", {
-        mobileOrEmail: inputValue.mobileOrEmail,
-      });
-
-      if (response.data.success) {
-        setResendTimer(60);
-        startResendTimer();
-      } else {
-        console.error("Failed to resend OTP:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error resending OTP:", error);
-    }
-  };
-
-  const startResendTimer = () => {
-    let timer = 60;
-    const interval = setInterval(() => {
-      setResendTimer((prevTimer) => {
-        if (prevTimer === 1) {
-          clearInterval(interval);
-        }
-        return prevTimer - 1;
-      });
-    }, 1000);
-  };
-
-  const handleOtpChange = (index, value) => {
-    if (!/^[0-9]?$/.test(value)) return;
-
-    let newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    if (value && index < 4) {
-      otpRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleBackspace = (index, e) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    }
-  };
-
+  const isInputValid = isValidInput();
 
   const handleLogin = async () => {
-    const otpCode = otp.join("");
-
-    try {
-      const response = await axios.post("https://your-api.com/verify-otp", {
-        mobileOrEmail: inputValue.mobileOrEmail,
-        otp: otpCode,
-      });
-
-      if (response.data.success) {
-        console.log("Login successful!", response.data);
-      } else {
-        console.error("Invalid OTP:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error verifying OTP:", error);
-    }
+    console.log(inputValue);
+    // Add login API logic here
   };
-
 
   return (
     <Box
@@ -131,132 +48,196 @@ function Login() {
         overflow: "hidden",
       }}
     >
-      <Grid container sx={{
-        width: "90%",
-        maxWidth: "100vw",
-        height: "100vh",
-        alignItems: "stretch",
-        overflow: "hidden"
-      }}>
-
-        {/* left Part */}
-        <Grid item xs={12} md={6}
+      <Grid
+        container
+        sx={{
+          width: "60%",
+          maxWidth: "100vw",
+          height: "80vh",
+          padding: 2,
+          backgroundColor: "#ffffff",
+          alignItems: "stretch",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}
+      >
+        {/* Left Part */}
+        <Grid
+          item
+          xs={12}
+          md={6}
           sx={{
             display: { xs: "none", md: "flex" },
             justifyContent: "center",
             alignItems: "center",
-            height: "100%"
-          }}>
-          <Box sx={{
-            width: "100%",
             height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            overflow: "hidden",
-            padding: 2
-          }}>
-            <img src={logo} alt="Login"
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              overflow: "hidden",
+              padding: 2,
+            }}
+          >
+            <img
+              src={logo}
+              alt="Login"
               style={{
                 width: "100%",
                 maxHeight: "620px",
                 height: "100%",
                 objectFit: "cover",
-                borderRadius: "12px"
+                borderRadius: "12px",
               }}
-              loading="lazy" />
+              loading="lazy"
+            />
           </Box>
         </Grid>
 
-        {/* right part */}
-        <Grid item xs={12} md={6}
+        {/* Right Part */}
+        <Grid
+          item
+          xs={12}
+          md={6}
           sx={{
             display: "flex",
             position: "relative",
             justifyContent: "center",
-            alignItems: "center"
-          }}>
-          <Box sx={{
-            width: "100%",
-            maxWidth: "550px",
-            height: "100%",
-            maxHeight: "620px",
-            display: "flex",
-            position: "absolute",
-            flexDirection: "column",
             alignItems: "center",
-            gap: 1.8,
-            borderRadius: "12px"
-          }}>
-            <Typography color="#1D90A6" variant="h1"
-              sx={{
-                fontSize: { xs: "24px", md: "24px" }
-              }}>
-              <img src={logo2} alt="Logo" width="185.97px" height="110px" />
+            padding: 2,
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: "550px",
+              height: "100%",
+              maxHeight: "620px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+              borderRadius: "12px",
+              paddingBottom: 8,
+            }}
+          >
+            <Typography
+              color="#1D90A6"
+              variant="h1"
+              sx={{ fontSize: { xs: "24px", md: "20px" } }}
+            >
+              <img src={logo2} alt="Logo" width="185px" height="100px" />
+              <Divider sx={{ width: "100%", height: "2px" }} />
             </Typography>
-            <Divider sx={{ width: "50%", }} />
 
-            <Typography color="#111827" fontWeight="bold" variant="h1" sx={{ fontSize: { xs: "24px", md: "24px" }, }}>
+            <Typography
+              color="#111827"
+              fontWeight="bold"
+              variant="h1"
+              sx={{ fontSize: { xs: "24px", md: "24px" } }}
+            >
               Login to Account
             </Typography>
 
-
-            <ButtonBox icon={<FcGoogle style={{ fontSize: "20px" }} />} text="Continue with Google" />
-            <ButtonBox icon={<AppleIcon />} text="Continue with Apple" />
+            <ButtonBox
+              icon={<FcGoogle style={{ fontSize: "20px" }} />}
+              text="Continue with Google"
+            />
             <ButtonBox icon={<Facebook />} text="Continue with Facebook" />
 
-
-            <Box sx={{ display: "flex", alignItems: "center", width: "100%", height: "10px" }}>
-              <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} className='bg-blue-700' />
+            <Box
+              sx={{ display: "flex", alignItems: "center", width: "100%", height: "10px" }}
+            >
+              <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} />
               <Typography sx={{ mx: 2, fontSize: "14px", color: "#666" }}>or</Typography>
               <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} />
             </Box>
 
-            <InputField label="Phone or Email" type="text" value={inputValue.mobileOrEmail} placeholder="Enter phone or email" onChange={handleInputChange} name="mobileOrEmail" />
+            {/* Mobile or Email */}
+            <InputField
+              label="Phone or Email"
+              type="text"
+              value={inputValue.mobileOrEmail}
+              placeholder="Enter phone or email"
+              onChange={handleInputChange}
+              name="mobileOrEmail"
+            />
 
-            {showOTPField && (
-              <Typography color="primary" variant="subtitle1" sx={{ fontSize: "14px", textAlign: "right", width: "100%" }}>
-                {resendTimer > 0 ? `Resend in ${resendTimer} sec` : <Button color="blue" sx={{ textTransform: "none", fontSize: "14px" }} onClick={handleResendOTP}>resend OTP</Button>}
-              </Typography>
-            )}
+            {/* Password with Toggle */}
+            <Box sx={{ position: "relative", width: "100%" }}>
+              <InputField
+                label="Enter Password"
+                type={showPassword ? "text" : "password"}
+                value={inputValue.password}
+                placeholder="Enter your password"
+                onChange={handleInputChange}
+                name="password"
+              />
+              {!showPassword && (
+                <BiSolidHide
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    fontSize: "20px",
+                    color: "#666",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setPassword(true)}
+                />
+              )}
+              {showPassword && (
+                <AiOutlineEye
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    fontSize: "20px",
+                    color: "#666",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setPassword(false)}
+                />
+              )}
+            </Box>
 
-            {showOTPField && (
-              <>
-                <Typography variant="subtitle1" sx={{ fontSize: "14px", textAlign: "left", width: "100%", }}>
-                  Enter OTP
-                </Typography>
+            <Link to="/forget" > <IoIosUnlock fontSize={"20px"}/> <span>forget Password </span></Link>
 
-                <Box sx={{ display: "flex", gap: 2, justifyContent: "center", alignItems: "center", }}>
-                  {otp.map((digit, index) => (
-                    <InputField
-                      key={index}
-                      type="text"
-                      variant="outlined"
-                      inputProps={{ maxLength: 1, style: { textAlign: "center" } }}
-                      value={digit}
-                      onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleBackspace(index, e)}
-                      inputRef={(el) => (otpRefs.current[index] = el)}
-                      sx={{ width: "15%", height: 50 }}
-                      placeholder="0"
-                    />
-                  ))}
-                </Box>
-              </>
-            )}
-
-            {!showOTPField ? (
-              <Button variant="contained" fullWidth disabled={!isValidInput()} onClick={handleSendOTP} sx={{ backgroundColor: "#1976D2", "&:hover": { backgroundColor: "#1565C0" } }}>
-                Send OTP
-              </Button>
-            ) : (
-              <Button variant="contained" onClick={handleLogin} fullWidth sx={{ backgroundColor: "#1976D2", "&:hover": { backgroundColor: "#1565C0" } }}>
-                Verify Number
-              </Button>
-            )}
+            {/* Login Button */}
+            <Button
+              variant="contained"
+              onClick={isInputValid ? handleLogin : undefined}
+              fullWidth
+              disabled={!isInputValid}
+              sx={{
+                backgroundColor: isInputValid ? "#1976D2" : "#c9c9c7",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: isInputValid ? "#1565C0" : "#c9c9c7",
+                },
+              }}
+            >
+              Login
+            </Button>
 
             <Typography variant="body1">
-              New user ? <Button component={Link} to="/signup" color="primary" sx={{ textTransform: "none", fontSize: "14px" }}>Sign-up</Button>
+              Don't have an account?
+              <Button
+                component={Link}
+                to="/signup"
+                color="primary"
+                sx={{ textTransform: "none", fontSize: "14px" }}
+              >
+                Sign up
+              </Button>
             </Typography>
           </Box>
         </Grid>

@@ -15,7 +15,7 @@ const ButtonBox = ({ icon, text, ...props }) => {
         justifyContent: "center", 
         alignItems: "center",
         position: "relative", 
-        paddingLeft: "40px", 
+        padding: "10px", 
         ...props.sx, 
       }}
     >
@@ -23,7 +23,7 @@ const ButtonBox = ({ icon, text, ...props }) => {
       <Box
         sx={{
           position: "absolute",
-          left: "10px",
+          left: "20px",
           display: "flex",
           alignItems: "center",
         }}
