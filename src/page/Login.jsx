@@ -4,7 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Facebook } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import logo from "../Assests/loginlogo.png";
-import logo2 from "../Assests/logoImage.jpg";
+import logo2 from "../Assests//logo.png";
 import InputField from "../component/InputField";
 import ButtonBox from "../component/ButtonBox";
 import { BiSolidHide } from "react-icons/bi";
@@ -53,7 +53,7 @@ function Login() {
         sx={{
           width: "60%",
           maxWidth: "100vw",
-          height: "80vh",
+          height: "90vh",
           padding: 2,
           backgroundColor: "#ffffff",
           alignItems: "stretch",
@@ -122,17 +122,16 @@ function Login() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 2,
+              gap: 1.8,
               borderRadius: "12px",
-              paddingBottom: 8,
             }}
           >
             <Typography
               color="#1D90A6"
               variant="h1"
-              sx={{ fontSize: { xs: "24px", md: "20px" } }}
+              sx={{  fontSize: { xs: "24px", md: "20px" } }}
             >
-              <img src={logo2} alt="Logo" width="185px" height="100px" />
+              <img src={logo2} alt="Logo" width="150px" height="5px" />
               <Divider sx={{ width: "100%", height: "2px" }} />
             </Typography>
 
@@ -209,7 +208,7 @@ function Login() {
               )}
             </Box>
 
-            <Link to="/forget" > <IoIosUnlock fontSize={"20px"}/> <span>forget Password </span></Link>
+            <Link to="/forget" className="flex gap-1" > <IoIosUnlock fontSize={"20px"}/> <span>forget Password </span></Link>
 
             {/* Login Button */}
             <Button
