@@ -129,9 +129,8 @@ function Login() {
             <Typography
               color="#1D90A6"
               variant="h1"
-              sx={{  fontSize: { xs: "24px", md: "20px" } }}
             >
-              <img src={logo2} alt="Logo" width="150px" height="5px" />
+              <img src={logo2} alt="Logo" width="100px" height="50px" />
               <Divider sx={{ width: "100%", height: "2px" }} />
             </Typography>
 
@@ -208,7 +207,7 @@ function Login() {
               )}
             </Box>
 
-            <Link to="/forget" className="flex gap-1" > <IoIosUnlock fontSize={"20px"}/> <span>forget Password </span></Link>
+            <Link to="/forget" className="flex gap-1 text-blue-500 hover:bg-blue-50 rounded-md p-1" > <IoIosUnlock fontSize={"20px"}/> <span>forget Password </span></Link>
 
             {/* Login Button */}
             <Button
