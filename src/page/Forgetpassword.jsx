@@ -52,7 +52,7 @@ function Forgetpassword() {
           padding: 2,
           backgroundColor: "#ffffff",
           alignItems: "stretch",
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.3)",
           borderRadius: "12px",
           overflow: "hidden",
         }}
@@ -183,7 +183,7 @@ function Forgetpassword() {
             {/* Back to Login Link */}
             <Link to="/login" className="text-blue-600 mt-3 py-2 border-2 border-gray-300 hover:bg-blue-600 hover:text-white w-full rounded-full">
        
-              <span>Back to login</span>
+              <span className="flex items-center justify-center gap-2"> <IoIosArrowRoundBack fontSize={"25px"}/> Back to login</span>
             </Link>
           </Box>
         </Grid>

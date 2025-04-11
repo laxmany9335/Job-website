@@ -57,7 +57,7 @@ function Login() {
           padding: 2,
           backgroundColor: "#ffffff",
           alignItems: "stretch",
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.3)",
           borderRadius: "12px",
           overflow: "hidden",
         }}
