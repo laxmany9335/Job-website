@@ -207,7 +207,7 @@ function Login() {
               )}
             </Box>
 
-            <Link to="/forget" className="flex gap-1 text-blue-500 hover:bg-blue-50 rounded-md p-1" > <IoIosUnlock fontSize={"20px"}/> <span>forget Password </span></Link>
+            <Link to="/forgetpassword" className="flex gap-1 text-blue-500 hover:bg-blue-50 rounded-md p-1" > <IoIosUnlock fontSize={"20px"}/> <span>forget Password </span></Link>
 
             {/* Login Button */}
             <Button
