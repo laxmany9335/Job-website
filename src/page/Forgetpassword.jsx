@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import logo from "../Assests/loginlogo.png";
-import lock from "../Assests/lock.png";
 import { Box, Grid, Typography } from "@mui/material";
 import InputField from "../component/InputField";
 import { Link } from "react-router-dom"; // ✅ Fixed: Correct Link import
@@ -81,7 +79,7 @@ function Forgetpassword() {
             }}
           >
             <img
-              src={logo}
+              src="/loginlogo.png"
               alt="Login"
               style={{
                 width: "100%",
@@ -142,7 +140,7 @@ function Forgetpassword() {
                   fontSize: { xs: "24px", md: "24px" },
                 }}
               >
-                <img src={lock} height={"60px"} width={"80px"} alt="Lock" />
+                <img src="/lock.png" height={"60px"} width={"80px"} alt="Lock" />
                 Forgot Password?
               </Typography>
               <p className="px-7">
