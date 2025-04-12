@@ -3,8 +3,6 @@ import { Box, Grid, Typography, Button, Divider } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
 import { Facebook } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import logo from "../Assests/loginlogo.png";
-import logo2 from "../Assests//logo.png";
 import InputField from "../component/InputField";
 import ButtonBox from "../component/ButtonBox";
 import { BiSolidHide } from "react-icons/bi";
@@ -86,7 +84,7 @@ function Login() {
             }}
           >
             <img
-              src={logo}
+              src="/loginlogo.png"
               alt="Login"
               style={{
                 width: "100%",
@@ -130,7 +128,7 @@ function Login() {
               color="#1D90A6"
               variant="h1"
             >
-              <img src={logo2} alt="Logo" width="100px" height="50px" />
+              <img src="/logo.png" alt="Logo" width="100px" height="50px" />
               <Divider sx={{ width: "100%", height: "2px" }} />
             </Typography>
 
