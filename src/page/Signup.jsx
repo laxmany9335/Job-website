@@ -49,7 +49,7 @@ const Signup = () => {
     formData.confirmPassword;
 
   return (
-    <div className="w-full h-screen fixed top-0 left-0 flex items-center justify-center bg-white">
+    <div className="w-full h-screen fixed top-0 left-0 flex items-center justify-center bg-white"  style={{ boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.3)" }}>
       <div className="w-[60%] max-w-full h-[90vh] bg-white rounded-[12px] shadow-[0px_4px_20px_rgba(0,0,0,0.1)] flex overflow-hidden">
         
         {/* Left Image */}
@@ -63,11 +63,18 @@ const Signup = () => {
         </div>
 
         {/* Right Form */}
-        <div className="w-full md:w-1/2 px-6 py-4 flex flex-col justify-start items-center max-h-[620px] overflow-y-auto ">
+        <div className="w-full md:w-1/2 px-6 py-4 flex flex-col justify-start items-center max-h-[620px] overflow-y-auto"
+         style={{
+          maxHeight: "620px",
+          overflowY: "auto",
+          scrollbarWidth: "none", /* for Firefox */
+          msOverflowStyle: "none", /* for IE and Edge */
+        }}>
           <div className="w-full max-w-[550px] flex flex-col gap-3">
 
             {/* Header */}
             <div className="flex flex-col justify-center items-center">
+            <img src="/logo.png" alt="Logo" width="100px" height="50px" />
               <h1 className="text-[24px] font-bold text-[#111827]">Sign up</h1>
               <div className="w-[50%] h-[2px] bg-gray-200 my-1"/>
             </div>
@@ -195,7 +202,7 @@ const Signup = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="flex flex-col gap-2 mb-1">
+            <div className="flex flex-col gap-3 mb-1">
               <button
                 type="submit"
                 onClick={handleSubmit}
@@ -205,7 +212,7 @@ const Signup = () => {
                 Sign Up
               </button>
 
-              <p className="text-xs text-gray-600 text-center">
+              <p className="text-md text-gray-600 text-center">
                 Already have an account?{" "}
                 <Link to="/login" className="text-blue-500 hover:underline">
                   Login
@@ -215,13 +222,9 @@ const Signup = () => {
 
             {/* Social Media Login */}
             <div className="flex gap-4 mb-1">
-              <button className="flex items-center gap-2 py-2 px-4 bg-blue-600 text-white rounded-full w-full">
+              <button className="flex items-center justify-center gap-2 py-2 px-4 bg-yellow-700 text-white rounded-full w-full">
                 <FcGoogle className="text-2xl" />
-                Continue with Google
-              </button>
-              <button className="flex items-center gap-2 py-2 px-4 bg-blue-600 text-white rounded-full w-full">
-                <Facebook className="text-2xl" />
-                Continue with Facebook
+               <span>  Continue with Google</span>
               </button>
             </div>
           </div>
