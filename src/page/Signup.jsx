@@ -207,7 +207,7 @@ const Signup = () => {
                 type="submit"
                 onClick={handleSubmit}
                 disabled={!isFormValid}
-                className={`w-full py-2 rounded-full text-white text-sm font-medium transition ${isFormValid ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"}`}
+                className={`w-full py-2 rounded-full text-white text-sm font-medium transition ${isFormValid ? "bg-[#1976D2] hover:bg-[#1565C0]" : "bg-gray-300 cursor-not-allowed"}`}
               >
                 Sign Up
               </button>

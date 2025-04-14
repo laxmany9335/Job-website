@@ -4,6 +4,7 @@ import Login from "./page/Login"
 import Home from './page/Home';
 import Signup from './page/Signup';
 import Forgetpassword from './page/Forgetpassword';
+import VerifyEmail from './page/VerifyEmail';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path='/verify-email' element={<VerifyEmail/>} />
         <Route path="/forgetpassword" element={<Forgetpassword />} />
       </Routes>   
     </div>
