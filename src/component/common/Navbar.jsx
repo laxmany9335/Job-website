@@ -1,7 +1,7 @@
 import React from 'react';
 import NavLink from '../data/NavLink';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import unstop from '../../assest/unstop-logo.svg'
+import logo from '../../assest/logo.png'
 import { BiMessageRoundedDetail } from "react-icons/bi"
 import { MdOutlineNotifications } from "react-icons/md";
 
@@ -11,7 +11,7 @@ function Navbar() {
         <div className='w-full bg-white border-b-1'>
             <nav className="w-[90vw] py-4 mx-auto flex justify-between items-center">
                 <div className='flex items-center justify-center gap-2'>
-                    <img src={unstop} alt='this is a image' height={"50px"} width={"70px"}  />
+                    <img src={logo} alt='this is a image' height={"50px"} width={"120px"}  />
                     <input type="text" placeholder="Search Opportunities.." className='border border-gray-400 py-2 rounded-full text-center focus:border-blue-300 focus:outline-none' />
                 </div>
                 <ul className='flex gap-2 items-center justify-center'>
@@ -29,7 +29,7 @@ function Navbar() {
                                 <BiMessageRoundedDetail fontSize={"40px"} className='h-full  hover:bg-blue-50 hover:text-blue-400 rounded-full p-1' />
                                  <MdOutlineNotifications fontSize={"40px"} className='h-full  hover:bg-blue-50 hover:text-blue-400 rounded-full p-1' />
                                  <div className='h-full w-[35px] border-2 border-gray-400 rounded-full'>
-                                        <img src={unstop} className='object-fit h-full w-full rounded-full p-1'/>
+                                        <img src={logo} className='object-fit h-full w-full rounded-full p-1'/>
                                 </div>
                             </div>
                         ) :
