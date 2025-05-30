@@ -1,8 +1,7 @@
-import React from 'react'
 
 function Dashboard() {
   return (
-    <div>Dashboard</div>
+    <div className="text-xl bg-gray-100 h-screen">Dashboard</div>
   )
 }
 

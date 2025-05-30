@@ -14,6 +14,7 @@ import TopMentors from '../component/homePage/TopMentors'
 import Footer from '../component/common/Footer'
 
 function Home() {
+
   return (
     <div className='w-[100vw] h-screen mx-auto overflow-x-hidden'>
       <Navbar />

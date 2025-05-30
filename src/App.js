@@ -6,18 +6,56 @@ import Signup from './page/Signup';
 import Forgetpassword from './page/Forgetpassword';
 import VerifyEmail from './page/VerifyEmail';
 import CompetitionsPage from './page/CompetitionsPage';
+import Dashboard from './page/Dashboard';
+import Error from './page/Error';
+import OpenRoute from './component/route/OpenRoute';
+import PrivateRoute from './component/route/PrivateRoute';
+import ResetPassword from './page/ResetPassword';
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path='/verify-email' element={<VerifyEmail/>} />
-        <Route path="/forgetpassword" element={<Forgetpassword />} />
-        <Route path="/competitions" element = {<CompetitionsPage/>}/>
-      </Routes>   
+        <Route path="/" element={
+          <Home />
+        } />
+        <Route path="/login" element={
+          <OpenRoute>
+            <Login />
+          </OpenRoute>
+        } />
+        <Route path="/signup" element={
+          <OpenRoute>
+            <Signup />
+          </OpenRoute>
+        } />
+        <Route path='/verify-email' element={
+          <OpenRoute>
+            <VerifyEmail />
+          </OpenRoute>
+        } />
+        <Route path="/forgetpassword" element={
+          <OpenRoute>
+            <Forgetpassword />
+          </OpenRoute>
+        } />
+        <Route path="/reset-password" element={
+          <OpenRoute>
+            <ResetPassword />
+          </OpenRoute>
+        } />
+        <Route path="/competitions" element={
+          <PrivateRoute>
+            <CompetitionsPage />
+          </PrivateRoute>
+        } />
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        } />
+        <Route path="*" element={<Error />} />
+      </Routes>
     </div>
   );
 }

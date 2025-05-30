@@ -1,34 +1,30 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const connectDB = require('./config/database');
-
+import express from 'express';
+import dotenv from 'dotenv';
+import connectDB from './config/database.js';
+import userRoute from './route/userRoutes.js';
+import cors from 'cors';
 dotenv.config();
 
+// Initialize app
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Database connection
+// Connect to database
 connectDB();
 
-// Middlewares
 app.use(express.json());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+}));
 
-// Routes
-app.get('/api/v1', (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "API v1 is live 🚀",
-    });
+app.use("/users", userRoute);
+
+app.get('/', ( req, res) => {
+    res.send("Welcome to the API");
 });
 
-app.get('/', (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Server is running",
-    });
-});
-
-// Start the server
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`✅ Server is running on http://localhost:${PORT}`);
 });

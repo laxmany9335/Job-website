@@ -2,17 +2,21 @@ import React, { useState } from "react";
 import { Box, Grid, Typography, Button, Divider } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
 import { Facebook } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputField from "../component/InputField";
 import ButtonBox from "../component/ButtonBox";
 import { BiSolidHide } from "react-icons/bi";
 import { AiOutlineEye } from "react-icons/ai";
 import { IoIosUnlock } from "react-icons/io";
+import { login } from "../services/operation/auth";
+import { useDispatch } from "react-redux";
 
 
 function Login() {
   const [inputValue, setInputValue] = useState({ mobileOrEmail: "", password: "" });
   const [showPassword, setPassword] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setInputValue({ ...inputValue, [e.target.name]: e.target.value });
@@ -27,8 +31,15 @@ function Login() {
   const isInputValid = isValidInput();
 
   const handleLogin = async () => {
-    console.log(inputValue);
-    // Add login API logic here  
+     try{
+      console.log("login form data..... ", inputValue.mobileOrEmail, inputValue.password);
+       const response = await dispatch(login(inputValue.mobileOrEmail, inputValue.password, navigate));
+       if (response) {
+         console.log("Login successful");
+       }
+     } catch (error) {
+       console.error("Login failed:", error);
+     }
   };
 
   return (

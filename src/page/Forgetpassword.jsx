@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import InputField from "../component/InputField";
-import { Link } from "react-router-dom"; // ✅ Fixed: Correct Link import
+import { Link, useNavigate } from "react-router-dom"; // ✅ Fixed: Correct Link import
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { forgetPassword } from "../services/operation/auth";
 
 function Forgetpassword() {
   const [email, setEmail] = useState({ email: "" });
+  const dispatch = useDispatch(); // Assuming you have a Redux setup
+  const navigate = useNavigate(); // Assuming you have a React Router setup
 
   // Handle input change
   function handleInputChange(e) {
@@ -19,11 +23,16 @@ function Forgetpassword() {
   };
 
   // Submit handler
-  function handleSubmit(e) {
+ async function handleSubmit(e) {
     e.preventDefault();
     if (!isValidInput()) return;
-    console.log("Submitting email:", email.email);
-    // TODO: Add backend logic here
+    try {
+      const response = await dispatch(forgetPassword(email.email, navigate));
+       console.log("Forget Password API Response:", response);
+    }
+    catch (error) {
+      console.error("Error submitting form:", error);
+    }
   }
 
   return (

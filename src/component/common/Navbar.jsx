@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import logo from '../../assest/logo.png'
 import { BiMessageRoundedDetail } from "react-icons/bi"
 import { MdOutlineNotifications } from "react-icons/md";
+import { useSelector } from 'react-redux';
 
 function Navbar() {
-    const islogin = false;
+    const {token} = useSelector((state) => state.auth)
+    
     return (
         <div className='w-full bg-white border-b-1'>
             <nav className="w-[90vw] py-4 mx-auto flex justify-between items-center">
@@ -24,7 +26,7 @@ function Navbar() {
                     ))}
                     <div className='w-[2px] h-[40px] bg-gray-300' />
                     {
-                       islogin ? (
+                       token ? (
                             <div className='h-[35px] flex items-center justify-center gap-2'>
                                 <BiMessageRoundedDetail fontSize={"40px"} className='h-full  hover:bg-blue-50 hover:text-blue-400 rounded-full p-1' />
                                  <MdOutlineNotifications fontSize={"40px"} className='h-full  hover:bg-blue-50 hover:text-blue-400 rounded-full p-1' />
