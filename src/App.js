@@ -11,8 +11,17 @@ import Error from './page/Error';
 import OpenRoute from './component/route/OpenRoute';
 import PrivateRoute from './component/route/PrivateRoute';
 import ResetPassword from './page/ResetPassword';
+import { loadTokenFromStorage } from './services/operation/auth';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 
 function App() {
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+        // Load token from localStorage when app starts
+        dispatch(loadTokenFromStorage());
+    }, [dispatch]);
   return (
     <div className="App">
       <Routes>
@@ -34,16 +43,18 @@ function App() {
             <VerifyEmail />
           </OpenRoute>
         } />
-        <Route path="/forgetpassword" element={
+        <Route path="/forget-password" element={
           <OpenRoute>
             <Forgetpassword />
           </OpenRoute>
         } />
-        <Route path="/reset-password" element={
-          <OpenRoute>
-            <ResetPassword />
-          </OpenRoute>
-        } />
+        <Route path="update-password/:id"
+          element={
+            <OpenRoute>
+              <ResetPassword />
+            </OpenRoute>
+          }
+        />
         <Route path="/competitions" element={
           <PrivateRoute>
             <CompetitionsPage />

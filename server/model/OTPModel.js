@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const mailSender = require("../utils/mailSender");
+import mongoose from "mongoose";
+import mailSender from "../utils/mailSender.js";
+
 const OTPSchema = new mongoose.Schema({
 	email: {
 		type: String,
@@ -12,7 +13,7 @@ const OTPSchema = new mongoose.Schema({
 	createdAt: {
 		type: Date,
 		default: Date.now,
-		expires: 60 * 5, // The document will be automatically deleted after 5 minutes of its creation time
+		expires: 60 * 5, 
 	},
 });
 
@@ -49,4 +50,4 @@ OTPSchema.pre("save", async function (next) {
 
 const OTP = mongoose.model("OTP", OTPSchema);
 
-module.exports = OTP;
+export default OTP;

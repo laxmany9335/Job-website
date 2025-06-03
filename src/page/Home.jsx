@@ -16,8 +16,20 @@ import Footer from '../component/common/Footer'
 function Home() {
 
   return (
-    <div className='w-[100vw] h-screen mx-auto overflow-x-hidden'>
-      <Navbar />
+   <div className="w-full h-screen overflow-x-hidden "
+   style={{ 
+            overflow: "auto", 
+            scrollbarWidth: "none", 
+            msOverflowStyle: "none",
+   }}
+   >
+  {/* Fixed Navbar */}
+  <div className="fixed w-full top-0 left-0 z-50">
+    <Navbar />
+  </div>
+
+  {/* Spacer below fixed navbar (adjust height as per Navbar) */}
+  <div className="h-20" />
 
       <div className='flex w-full my-10 px-20 items-center justify-center'>
         <div className='w-[50%] flex flex-col justify-center  gap-5'>

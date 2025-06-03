@@ -1,28 +1,45 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Cookies from 'js-cookie';
+
+// Helper function to safely get token from localStorage
+const getTokenFromStorage = () => {
+    try {
+        const token = localStorage.getItem("token");
+        return token ? JSON.parse(token) : null;
+    } catch (error) {
+        console.error("Error parsing token from localStorage:", error);
+        localStorage.removeItem("token"); // Remove corrupted token
+        return null;
+    }
+};
 
 const initialState = {
-  signupData: null,
-  loading: false,
-  token: Cookies.get("token") ?? null,
+    signupData: null,
+    loading: false,
+    token: getTokenFromStorage(), // Initialize from localStorage
 };
 
 const authSlice = createSlice({
-  name: "auth",
-  initialState: initialState,
-  reducers: {
-    setSignupData(state, value) {
-      state.signupData = value.payload;
+    name: "auth",
+    initialState,
+    reducers: {
+        setSignupData(state, action) {
+            state.signupData = action.payload;
+        },
+        setLoading(state, action) {
+            state.loading = action.payload;
+        },
+        setToken(state, action) {
+            state.token = action.payload;
+            
+            // Sync with localStorage
+            if (action.payload) {
+                localStorage.setItem("token", JSON.stringify(action.payload));
+            } else {
+                localStorage.removeItem("token");
+            }
+        },
     },
-    setLoading(state, value) {
-      state.loading = value.payload;
-    },
-    setToken(state, value) {
-      state.token = value.payload;
-    },
-  },
 });
 
 export const { setSignupData, setLoading, setToken } = authSlice.actions;
-
 export default authSlice.reducer;
