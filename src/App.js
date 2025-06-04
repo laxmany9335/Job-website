@@ -14,6 +14,7 @@ import ResetPassword from './page/ResetPassword';
 import { loadTokenFromStorage } from './services/operation/auth';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import MyProfile from './page/MyProfile';
 
 function App() {
   const dispatch = useDispatch();
@@ -65,6 +66,15 @@ function App() {
             <Dashboard />
           </PrivateRoute>
         } />
+
+        <Route path="/my-profile" element={
+          <PrivateRoute>
+            <MyProfile />
+          </PrivateRoute>
+        } />
+
+
+
         <Route path="*" element={<Error />} />
       </Routes>
     </div>
