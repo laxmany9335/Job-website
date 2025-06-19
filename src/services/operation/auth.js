@@ -103,7 +103,7 @@ export function login(mobileOrEmail, password, navigate) {
             dispatch(setToken(token));
             localStorage.setItem("token", JSON.stringify(token));
             
-            navigate("/");
+            navigate("/dashboard/my-profile");
             return response.data.success;
         } catch (error) {
             toast.error(error.message || "Login Failed");
@@ -117,40 +117,16 @@ export function login(mobileOrEmail, password, navigate) {
 
 export const logout = (token, navigate) => {
     return async (dispatch) => {
-        console.log("logout.....................", token)
-        const toastId = toast.loading("Logging out...");
-        dispatch(setLoading(true));
-
-        try {
-            const response = await apiConnector("POST", LOGOUT_API, null, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            console.log("LOGOUT API RESPONSE............", response);
-
-            if (!response.data.success) {
-                throw new Error(response.data.message);
-            }
-
+       
             toast.success("Logout Successful");
 
             // Clear user data from both Redux store and localStorage
             dispatch(setToken(null));
             localStorage.removeItem("token");
-            Cookie.set(null)
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
             // Redirect to login page
             navigate("/login");
-        } catch (error) {
-            console.log("LOGOUT API ERROR............", error);
-            toast.error(error.message || "Logout Failed");
-            return false;
-        } finally {
-            dispatch(setLoading(false));
-            toast.dismiss(toastId);
-        }
     };
 };
 

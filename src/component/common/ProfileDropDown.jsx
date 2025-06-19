@@ -60,7 +60,7 @@ function ProfileDropDown({ onClose }) {
       </Link>
       
       <Link
-        to="/my-profile"
+        to="/dashboard/my-profile"
         className="block px-5 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 font-medium focus:outline-none focus:bg-blue-50"
         onClick={handleLinkClick}
         role="menuitem"

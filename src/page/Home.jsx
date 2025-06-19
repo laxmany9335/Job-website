@@ -16,7 +16,7 @@ import Footer from '../component/common/Footer'
 function Home() {
 
   return (
-   <div className="w-full h-screen overflow-x-hidden "
+   <div className="w-full min-h-screen overflow-x-hidden"
    style={{ 
             overflow: "auto", 
             scrollbarWidth: "none", 
@@ -29,71 +29,100 @@ function Home() {
   </div>
 
   {/* Spacer below fixed navbar (adjust height as per Navbar) */}
-  <div className="h-20" />
+  <div className="h-16 sm:h-20" />
 
-      <div className='flex w-full my-10 px-20 items-center justify-center'>
-        <div className='w-[50%] flex flex-col justify-center  gap-5'>
-          <h1 className='text-5xl font-bold'>
+      {/* Hero Section */}
+      <div className='flex flex-col lg:flex-row w-full my-6 sm:my-10 px-4 sm:px-8 lg:px-20 items-center justify-center gap-8 lg:gap-0'>
+        {/* Text Content */}
+        <div className='w-full lg:w-[50%] pt-[100px] pb-[70px] flex flex-col justify-center gap-5 text-center lg:text-left'>
+          <h1 className='text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight'>
             <span className='text-blue-900'>Start</span> Your Career
           </h1>
-          <p className='text-gray-400 text-md'>
+          <p className='text-gray-400 text-sm sm:text-base lg:text-md max-w-lg mx-auto lg:mx-0'>
             Explore opportunities from across the globe to grow, showcase skills, gain CV points & get hired by your dream company.
           </p>
         </div>
 
-        <div className='flex w-[50%] gap-4 flex-wrap items-center justify-center'>
-          <Link to={"/internship"}>
-           <img src={logo1} alt="internship" className="w-[280px] h-30 rounded-xl shadow-lg border-1 border-gray-200 hover:scale-110 transtion-all duration-2000 shadow-blue-300" />
+        {/* Image Grid */}
+        <div className='w-full lg:w-[50%] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 items-center justify-center max-w-4xl'>
+          <Link to={"/internship"} className="flex justify-center">
+           <img 
+             src={logo1} 
+             alt="internship" 
+             className="w-full max-w-[280px] h-auto rounded-xl shadow-lg border border-gray-200 hover:scale-105 transition-all duration-300 shadow-blue-300" 
+           />
           </Link>
 
-          <Link to={"/mentor"}>
-          <img src={logo2} alt="internship" className="w-[280px] h-30 rounded-xl shadow-lg border-1 border-gray-200 hover:scale-110 transtion-all duration-2000 shadow-blue-300" />
+          <Link to={"/mentor"} className="flex justify-center">
+          <img 
+            src={logo2} 
+            alt="mentor" 
+            className="w-full max-w-[280px] h-auto rounded-xl shadow-lg border border-gray-200 hover:scale-105 transition-all duration-300 shadow-blue-300" 
+          />
           </Link>
 
-          <Link to ={"/job"}>
-          <img src={logo2} alt="internship" className="w-[280px] h-30 rounded-xl shadow-lg border-1 border-gray-200 hover:scale-110 transtion-all duration-2000 shadow-blue-300" />
+          <Link to ={"/job"} className="flex justify-center">
+          <img 
+            src={logo2} 
+            alt="job" 
+            className="w-full max-w-[280px] h-auto rounded-xl shadow-lg border border-gray-200 hover:scale-105 transition-all duration-300 shadow-blue-300" 
+          />
           </Link>
 
-          <Link to={"/practice"}>
-          <img src={logo2} alt="internship" className="w-[280px] h-30 rounded-xl shadow-lg border-1 border-gray-200 hover:scale-110 transtion-all duration-1000 shadow-blue-300" />
+          <Link to={"/practice"} className="flex justify-center">
+          <img 
+            src={logo2} 
+            alt="practice" 
+            className="w-full max-w-[280px] h-auto rounded-xl shadow-lg border border-gray-200 hover:scale-105 transition-all duration-300 shadow-blue-300" 
+          />
           </Link>
 
-          <Link to = {"competition"}>
-          <img src={logo2} alt="internship" className="w-[280px] h-30 rounded-xl shadow-lg border-1 border-gray-200 hover:scale-110 transtion-all duration-2000 shadow-blue-300" />
+          <Link to = {"/competition"} className="flex justify-center">
+          <img 
+            src={logo2} 
+            alt="competition" 
+            className="w-full max-w-[280px] h-auto rounded-xl shadow-lg border border-gray-200 hover:scale-105 transition-all duration-300 shadow-blue-300" 
+          />
           </Link>
 
-          <Link to={"more"}>
-          <img src={logo2} alt="internship" className="w-[280px] h-30 rounded-xl shadow-lg border-1 border-gray-200 hover:scale-110 transtion-all duration-2000 shadow-blue-300" />
+          <Link to={"/more"} className="flex justify-center">
+          <img 
+            src={logo2} 
+            alt="more" 
+            className="w-full max-w-[280px] h-auto rounded-xl shadow-lg border border-gray-200 hover:scale-105 transition-all duration-300 shadow-blue-300" 
+          />
           </Link>
 
         </div>
       </div>
 
-      <div className='flex w-full my-10 px-20 items-start justify-start'>
-      <UseCard/>
+      {/* UseCard Section */}
+      <div className='flex w-full my-6 sm:my-10 px-4 sm:px-8 lg:px-20 items-start justify-start'>
+        <UseCard/>
       </div>
 
-      <div>
+      {/* Other Sections */}
+      <div className="px-4 sm:px-8 lg:px-0">
         <SliderData/>
       </div>
 
-      <div>
+      <div className="px-4 sm:px-8 lg:px-0">
         <FeaturedOpportunities/>
       </div>
 
-      <div>
+      <div className="px-4 sm:px-8 lg:px-0">
         <Competitions/>
       </div>
 
-      <div>
+      <div className="px-4 sm:px-8 lg:px-0">
         <Internships/>
       </div>
 
-      <div>
+      <div className="px-4 sm:px-8 lg:px-0">
         <Jobs/>
       </div>
 
-      <div>
+      <div className="px-4 sm:px-8 lg:px-0">
         <TopMentors/>
       </div>
 

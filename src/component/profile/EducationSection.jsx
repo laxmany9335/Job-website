@@ -104,36 +104,38 @@ const EducationSection = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white">
+    <div className="w-full max-w-6xl mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-8">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <GraduationCap className="w-6 h-6 text-blue-600" />
+          <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
+            <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
           </div>
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">Education</h2>
-            <p className="text-gray-600">Add your educational qualifications</p>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Education</h2>
+            <p className="text-sm sm:text-base text-gray-600">Add your educational qualifications</p>
           </div>
         </div>
         <button
           onClick={openForm}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
-          Add Education
+          <span className="hidden xs:inline">Add Education</span>
+          <span className="xs:hidden">Add</span>
         </button>
       </div>
 
       {/* Add/Edit Form */}
       {isFormOpen && (
-        <div className="bg-gray-50 rounded-xl p-6 mb-8 border border-gray-200">
+        <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-6 md:mb-8 border border-gray-200">
           <h3 className="text-lg font-semibold mb-4 text-gray-900">
             {editingId ? 'Edit Education' : 'Add New Education'}
           </h3>
           
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Degree and Field */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Degree/Course *
@@ -144,7 +146,7 @@ const EducationSection = () => {
                   value={formData.degree}
                   onChange={handleInputChange}
                   placeholder="e.g., B.Tech, MBA, M.Sc"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -159,11 +161,12 @@ const EducationSection = () => {
                   value={formData.field}
                   onChange={handleInputChange}
                   placeholder="e.g., Computer Science, Commerce"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
 
+            {/* Institution */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Institution Name *
@@ -174,13 +177,14 @@ const EducationSection = () => {
                 value={formData.institution}
                 onChange={handleInputChange}
                 placeholder="College/University name"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
+            {/* Location, Start Year, End Year */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="sm:col-span-2 lg:col-span-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Location
                 </label>
@@ -190,7 +194,7 @@ const EducationSection = () => {
                   value={formData.location}
                   onChange={handleInputChange}
                   placeholder="City, State"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               
@@ -204,7 +208,7 @@ const EducationSection = () => {
                   value={formData.startYear}
                   onChange={handleInputChange}
                   placeholder="2020"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               
@@ -218,11 +222,12 @@ const EducationSection = () => {
                   value={formData.endYear}
                   onChange={handleInputChange}
                   placeholder="2024 or Present"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
 
+            {/* Grade */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Grade/Score
@@ -233,10 +238,11 @@ const EducationSection = () => {
                 value={formData.grade}
                 onChange={handleInputChange}
                 placeholder="e.g., 8.5 CGPA, 85%"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
+            {/* Description */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description
@@ -247,20 +253,21 @@ const EducationSection = () => {
                 onChange={handleInputChange}
                 placeholder="Additional details, achievements, projects, etc..."
                 rows="3"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               />
             </div>
 
-            <div className="flex gap-3 pt-2">
+            {/* Form Actions */}
+            <div className="flex flex-col xs:flex-row gap-3 pt-2">
               <button
                 onClick={handleSubmit}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base order-2 xs:order-1"
               >
                 {editingId ? 'Update' : 'Add'}
               </button>
               <button
                 onClick={() => setIsFormOpen(false)}
-                className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors text-sm sm:text-base order-1 xs:order-2"
               >
                 Cancel
               </button>
@@ -270,57 +277,60 @@ const EducationSection = () => {
       )}
 
       {/* Education List */}
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {educationList.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <GraduationCap className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium mb-2">No education entries found</h3>
-            <p className="text-sm">Click "Add Education" to add your educational qualifications</p>
+          <div className="text-center py-8 sm:py-12 text-gray-500">
+            <GraduationCap className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-gray-300" />
+            <h3 className="text-base sm:text-lg font-medium mb-2">No education entries found</h3>
+            <p className="text-xs sm:text-sm px-4">Click "Add Education" to add your educational qualifications</p>
           </div>
         ) : (
           educationList.map((education) => (
-            <div key={education.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-start gap-4">
-                    <div className="p-2 bg-blue-50 rounded-lg">
-                      <GraduationCap className="w-5 h-5 text-blue-600" />
+            <div key={education.id} className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                    <div className="p-2 bg-blue-50 rounded-lg self-start flex-shrink-0">
+                      <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                     </div>
                     
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900">
-                        {education.degree}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-900 leading-tight">
+                        <span className="block sm:inline">{education.degree}</span>
                         {education.field && (
-                          <span className="text-blue-600"> - {education.field}</span>
+                          <span className="block sm:inline text-blue-600 sm:ml-0">
+                            <span className="hidden sm:inline"> - </span>
+                            {education.field}
+                          </span>
                         )}
                       </h3>
                       
-                      <p className="text-lg text-gray-700 mt-1">{education.institution}</p>
+                      <p className="text-base sm:text-lg text-gray-700 mt-1 break-words">{education.institution}</p>
                       
-                      <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                      <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-4 mt-3 text-xs sm:text-sm text-gray-600">
                         {education.location && (
-                          <div className="flex items-center gap-1">
-                            <MapPin className="w-4 h-4" />
-                            {education.location}
+                          <div className="flex items-center gap-1 flex-shrink-0">
+                            <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="truncate">{education.location}</span>
                           </div>
                         )}
                         
                         {(education.startYear || education.endYear) && (
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            {education.startYear} - {education.endYear || 'Present'}
+                          <div className="flex items-center gap-1 flex-shrink-0">
+                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span>{education.startYear} - {education.endYear || 'Present'}</span>
                           </div>
                         )}
                         
                         {education.grade && (
-                          <div className="font-medium text-green-600">
+                          <div className="font-medium text-green-600 flex-shrink-0">
                             {education.grade}
                           </div>
                         )}
                       </div>
                       
                       {education.description && (
-                        <p className="text-gray-600 mt-3 leading-relaxed">
+                        <p className="text-gray-600 mt-3 leading-relaxed text-sm sm:text-base break-words">
                           {education.description}
                         </p>
                       )}
@@ -328,7 +338,8 @@ const EducationSection = () => {
                   </div>
                 </div>
                 
-                <div className="flex gap-2 ml-4">
+                {/* Action Buttons */}
+                <div className="flex flex-row lg:flex-col gap-2 justify-end lg:justify-start flex-shrink-0">
                   <button
                     onClick={() => handleEdit(education)}
                     className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -350,11 +361,12 @@ const EducationSection = () => {
         )}
       </div>
       
+      {/* Add More Button */}
       {educationList.length > 0 && (
-        <div className="text-center mt-8">
+        <div className="text-center mt-6 md:mt-8">
           <button
             onClick={openForm}
-            className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2 mx-auto"
+            className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2 mx-auto text-sm sm:text-base"
           >
             <Plus className="w-4 h-4" />
             Add More Education
