@@ -27,7 +27,7 @@ export const resetPasswordToken = async (req, res) => {
 		);
 		console.log("DETAILS", updatedDetails);
 
-		const url = `http://localhost:3000/update-password/${token}`;
+		const url = `https://job-website-gvup-git-main-laxman-yadav-s-projects.vercel.app/update-password/${token}`;
 
 		await mailSender(
 			email,
