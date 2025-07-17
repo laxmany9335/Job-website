@@ -15,6 +15,10 @@ import { loadTokenFromStorage } from './services/operation/auth';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import MyProfile from './page/MyProfile';
+import Internships from './page/Internships';
+import Job from './page/Job';
+import Mentorships from './page/Mentorships';
+import Practice from './page/Practice';
 
 function App() {
   const dispatch = useDispatch();
@@ -74,6 +78,39 @@ function App() {
         } />
 
 
+        <Route path="/competitions" element={
+          <PrivateRoute>
+            <CompetitionsPage />
+          </PrivateRoute>
+        } />
+
+
+        <Route path="/internships" element={
+          <PrivateRoute>
+            <Internships />
+          </PrivateRoute>
+        } />
+
+
+        <Route path="/jobs" element={
+          <PrivateRoute>
+            <Job />
+          </PrivateRoute>
+        } />
+
+
+        <Route path="/mentorships" element={
+          <PrivateRoute>
+            <Mentorships />
+          </PrivateRoute>
+        } />
+
+
+          <Route path="/practice" element={
+          <PrivateRoute>
+            <Practice />
+          </PrivateRoute>
+        } />
 
         <Route path="*" element={<Error />} />
       </Routes>

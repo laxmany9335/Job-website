@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, GraduationCap, Calendar, MapPin } from 'lucide-react';
+import { addEducation } from '../../services/operation/profile/addEducation';
+import { useDispatch } from 'react-redux';
 
 const EducationSection = () => {
   const [educationList, setEducationList] = useState([
     {
       id: 1,
       degree: "Bachelor of Technology",
-      field: "Computer Science",
-      institution: "Indian Institute of Technology",
+      studyField: "Computer Science",
+      instituteName: "Indian Institute of Technology",
       location: "Delhi, India",
       startYear: "2019",
       endYear: "2023",
@@ -15,13 +17,13 @@ const EducationSection = () => {
       description: "Specialized in software development and data structures. Active member of coding club."
     }
   ]);
-
+  const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     degree: '',
-    field: '',
-    institution: '',
+    studyField: '',
+    instituteName: '',
     location: '',
     startYear: '',
     endYear: '',
@@ -32,8 +34,8 @@ const EducationSection = () => {
   const resetForm = () => {
     setFormData({
       degree: '',
-      field: '',
-      institution: '',
+      studyField: '',
+      instituteName: '',
       location: '',
       startYear: '',
       endYear: '',
@@ -51,26 +53,32 @@ const EducationSection = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    if (!formData.degree || !formData.institution) {
-      alert('Please fill in degree and institution name');
+  const handleSubmit = async () => {
+    if (!formData.degree || !formData.instituteName) {
+      alert('Please fill in degree and instituteName name');
       return;
     }
 
     if (editingId) {
-      setEducationList(prev => 
-        prev.map(edu => 
-          edu.id === editingId 
+      setEducationList(prev =>
+        prev.map(edu =>
+          edu.id === editingId
             ? { ...formData, id: editingId }
             : edu
         )
       );
     } else {
-      const newEducation = {
-        ...formData,
-        id: Date.now()
-      };
-      setEducationList(prev => [newEducation, ...prev]);
+      try {
+        const success = await dispatch(addEducation(formData));
+        if (success) {
+          setEducationList(prev => [formData, ...prev]);
+        }
+        console.log(success)
+      }
+      catch (error) {
+        console.error("Error adding education:", error);
+        alert("Failed to add education. Please try again.");
+      }
     }
 
     resetForm();
@@ -80,8 +88,8 @@ const EducationSection = () => {
   const handleEdit = (education) => {
     setFormData({
       degree: education.degree,
-      field: education.field,
-      institution: education.institution,
+      studyField: education.studyField,
+      instituteName: education.instituteName,
       location: education.location,
       startYear: education.startYear,
       endYear: education.endYear,
@@ -132,9 +140,9 @@ const EducationSection = () => {
           <h3 className="text-lg font-semibold mb-4 text-gray-900">
             {editingId ? 'Edit Education' : 'Add New Education'}
           </h3>
-          
+
           <div className="space-y-4">
-            {/* Degree and Field */}
+            {/* Degree and studyField */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -150,15 +158,15 @@ const EducationSection = () => {
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Field of Study
+                  studyField of Study
                 </label>
                 <input
                   type="text"
-                  name="field"
-                  value={formData.field}
+                  name="studyField"
+                  value={formData.studyField}
                   onChange={handleInputChange}
                   placeholder="e.g., Computer Science, Commerce"
                   className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -166,15 +174,15 @@ const EducationSection = () => {
               </div>
             </div>
 
-            {/* Institution */}
+            {/* instituteName */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Institution Name *
+                instituteName Name *
               </label>
               <input
                 type="text"
-                name="institution"
-                value={formData.institution}
+                name="instituteName"
+                value={formData.instituteName}
                 onChange={handleInputChange}
                 placeholder="College/University name"
                 className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -197,7 +205,7 @@ const EducationSection = () => {
                   className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Start Year
@@ -211,7 +219,7 @@ const EducationSection = () => {
                   className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   End Year
@@ -293,20 +301,20 @@ const EducationSection = () => {
                     <div className="p-2 bg-blue-50 rounded-lg self-start flex-shrink-0">
                       <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg sm:text-xl font-semibold text-gray-900 leading-tight">
                         <span className="block sm:inline">{education.degree}</span>
-                        {education.field && (
+                        {education.studyField && (
                           <span className="block sm:inline text-blue-600 sm:ml-0">
                             <span className="hidden sm:inline"> - </span>
-                            {education.field}
+                            {education.studyField}
                           </span>
                         )}
                       </h3>
-                      
-                      <p className="text-base sm:text-lg text-gray-700 mt-1 break-words">{education.institution}</p>
-                      
+
+                      <p className="text-base sm:text-lg text-gray-700 mt-1 break-words">{education.instituteName}</p>
+
                       <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-4 mt-3 text-xs sm:text-sm text-gray-600">
                         {education.location && (
                           <div className="flex items-center gap-1 flex-shrink-0">
@@ -314,21 +322,21 @@ const EducationSection = () => {
                             <span className="truncate">{education.location}</span>
                           </div>
                         )}
-                        
+
                         {(education.startYear || education.endYear) && (
                           <div className="flex items-center gap-1 flex-shrink-0">
                             <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span>{education.startYear} - {education.endYear || 'Present'}</span>
                           </div>
                         )}
-                        
+
                         {education.grade && (
                           <div className="font-medium text-green-600 flex-shrink-0">
                             {education.grade}
                           </div>
                         )}
                       </div>
-                      
+
                       {education.description && (
                         <p className="text-gray-600 mt-3 leading-relaxed text-sm sm:text-base break-words">
                           {education.description}
@@ -337,7 +345,7 @@ const EducationSection = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Action Buttons */}
                 <div className="flex flex-row lg:flex-col gap-2 justify-end lg:justify-start flex-shrink-0">
                   <button
@@ -360,7 +368,7 @@ const EducationSection = () => {
           ))
         )}
       </div>
-      
+
       {/* Add More Button */}
       {educationList.length > 0 && (
         <div className="text-center mt-6 md:mt-8">

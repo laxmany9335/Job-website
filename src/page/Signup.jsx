@@ -71,7 +71,7 @@ const Signup = () => {
 
             {/* Account Type Switch */}
             <div className="flex justify-center gap-4 mb-6">
-              {["Student", "Instructor"].map((type) => (
+              {["Student", "Recruiter"].map((type) => (
                 <button
                   key={type}
                   onClick={() =>

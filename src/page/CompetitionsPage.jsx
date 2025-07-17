@@ -1,8 +1,17 @@
-import React from 'react'
-
+import Navbar from '../component/common/Navbar'
+import Footer from '../component/common/Footer'
 function CompetitionsPage() {
   return (
-    <div>Competitions</div>
+    <div>
+      <Navbar />
+      <h1>
+        CompetitionsPage
+      </h1>
+
+      <div className = " bottom-0 left-0 right-0">
+          <Footer/>
+      </div>
+    </div>
   )
 }
 

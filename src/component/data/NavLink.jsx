@@ -22,6 +22,7 @@ const NavLink = [
     {
         id: 5,
         name: "Practice",
+        path: "/practice",
         
     },
     {

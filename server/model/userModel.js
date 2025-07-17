@@ -38,24 +38,65 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     token: {
-			type: String,
-		},
+      type: String,
+    },
     resetPasswordExpires: {
-			type: Date,
-		},
+      type: Date,
+    },
     accountType: {
       type: String,
-      enum: ["Student", "Instructor"],
+      enum: ["Student", "Recruiter"],
       default: "Student",
     },
     approved: {
       type: Boolean,
-      default: true, // true for students, false for instructors until admin approval
+      default: true,
     },
-    // You can add profile image, bio, or other optional fields later
+    profile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+    education: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Education",
+      }
+    ],
+    workExperience: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "WorkExperience",
+      }
+    ],
+    projects: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
+      }
+    ],
+    skillSet: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SkillSet",
+    },
+    socialLinks: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SocialLinks",
+    },
+    achievements: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Achievement",
+      }
+    ],
+    certifications: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Certification",
+      }
+    ],
   },
   {
-    timestamps: true, // adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
