@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Link } from 'react-router-dom';
 import { FiArrowRightCircle } from "react-icons/fi";
 
@@ -35,9 +35,9 @@ const data = [
 
 function Internships() {
   return (
-    <div className=" p-8 mt-20">
+    <div className=" p-8">
       <div className="flex flex-col px-4 py-6 gap-10">
-        <div className="flex justify-between w-full px-10">
+         <div className="flex justify-between lg:px-10 items-start w-full ">
           <div className='flex flex-col max-w-lg'>
             <h1 className="text-gray-900 text-2xl font-bold">Internships</h1>
             <p className="text-gray-700 text-sm mt-1">
@@ -46,7 +46,7 @@ function Internships() {
           </div>
           <div>
             <Link to ="/competitions" className='flex items-center justify-center gap-x-2 bg-gray-600 rounded-md text-white p-2 hover:bg-yellow-400 hover:text-black'>
-             <span>Expore More</span>
+             <span className='text-sm'>Explore More</span>
              <FiArrowRightCircle fontSize={"24px"}/>
             </Link>
           </div>

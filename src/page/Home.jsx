@@ -4,7 +4,6 @@ import logo1 from "../assest/internship.jpeg"
 import logo2 from "../assest/mentor.png"
 import { Link } from 'react-router-dom'
 import UseCard from '../component/homePage/UseCard'
-import { Slider, SliderMarkLabel } from '@mui/material'
 import SliderData from '../component/homePage/SliderData'
 import FeaturedOpportunities from '../component/homePage/FeaturedOpportunities'
 import Competitions from '../component/homePage/Competitions'
@@ -106,7 +105,7 @@ function Home() {
         <SliderData/>
       </div>
 
-      <div className="px-4 sm:px-8 lg:px-0">
+      <div className="px-0 sm:px-8 lg:px-0">
         <FeaturedOpportunities/>
       </div>
 

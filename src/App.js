@@ -15,7 +15,7 @@ import { loadTokenFromStorage } from './services/operation/auth';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import MyProfile from './page/MyProfile';
-import Internships from './page/Internships';
+import InternshipsPage from './page/InternshipsPage';
 import Job from './page/Job';
 import Mentorships from './page/Mentorships';
 import Practice from './page/Practice';
@@ -87,7 +87,7 @@ function App() {
 
         <Route path="/internships" element={
           <PrivateRoute>
-            <Internships />
+            <InternshipsPage />
           </PrivateRoute>
         } />
 
