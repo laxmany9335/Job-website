@@ -89,10 +89,10 @@ function ResetPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       {loading ? (
-        <div className="flex flex-col items-center justify-center gap-6">
+        <div className="flex flex-col items-center justify-center gap-6 ">
           {/* Modern loading spinner */}
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
             <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-pink-500 rounded-full animate-spin" style={{ animationDirection: 'reverse' }}></div>
           </div>
           <p className="text-xl font-medium text-white animate-pulse">
@@ -100,12 +100,12 @@ function ResetPassword() {
           </p>
         </div>
       ) : (
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-xl">
           {/* Main card */}
-          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl p-8">
+          <div className="bg-gray-600 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl p-4">
             {/* Header */}
-            <div className="text-center mb-8">
-              <div className="mx-auto w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mb-4">
+            <div className="text-center">
+              <div className="mx-auto w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center ">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                 </svg>
