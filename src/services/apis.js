@@ -1,5 +1,5 @@
-const BASE_URL = "http://localhost:5000/api/v1"
-// const BASE_URL = "https://job-website-wvwi.onrender.com";
+// const BASE_URL = "http://localhost:5000/api/v1"
+const BASE_URL = "https://job-website-wvwi.onrender.com";
 
 //User api
 export const endpoints = {
