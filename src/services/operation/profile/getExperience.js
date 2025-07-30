@@ -4,14 +4,15 @@ import { setLoading } from "../../../slice/authSlice";
 import { profileEndpoints } from '../../apis'
 const { GET_EXPERIENCE } = profileEndpoints;
 
-export function getExperience(formData) {
+export function getExperience(token) {
     return async (dispatch) => {
         const toastId = toast.loading("Fetching Experience...");
-        console.log("first", formData, "formData in getExperience function");
         dispatch(setLoading(true));
         try {
-            console.log("second")
-           const response = await apiConnector("GET", GET_EXPERIENCE, formData);
+            const response = await apiConnector("GET", GET_EXPERIENCE,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
             if (!response.data.success) {
                 throw new Error(response.data.message);
@@ -19,7 +20,7 @@ export function getExperience(formData) {
 
             toast.success("Experience Fetched Successfully");
             console.log(response, "GET_EXPERIENCE API RESPONSE............");
-            return response.data.success;
+            return response;
         } catch (error) {
             toast.error(error.message || "Failed to Fetch Education");
             console.error("Error fetching education:", error);

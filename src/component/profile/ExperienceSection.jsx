@@ -1,40 +1,20 @@
-import React, { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2, Briefcase, Calendar, MapPin, Building, Award, Users } from 'lucide-react';
+import { addExperience } from '../../services/operation/profile/addExperience';
+import { getExperience } from '../../services/operation/profile/getExperience';
+import { updateExperience } from '../../services/operation/profile/updateExperience';
+import { deleteExperience } from '../../services/operation/profile/deleteExperience';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ExperienceSection = () => {
-  const [experienceList, setExperienceList] = useState([
-    {
-      id: 1,
-      position: "Senior Software Developer",
-      company: "Tech Solutions Inc.",
-      location: "Bangalore, India",
-      employmentType: "Full-time",
-      startDate: "2022-01",
-      endDate: "",
-      currentJob: true,
-      description: "Leading a team of 5 developers in building scalable web applications. Responsible for architecture decisions, code reviews, and mentoring junior developers.",
-      responsibilities: ["Team leadership", "Code architecture", "Performance optimization", "Mentoring junior developers"],
-      achievements: ["Improved application performance by 40%", "Successfully delivered 5 major projects"],
-      skills: ["React", "Node.js", "AWS", "MongoDB"]
-    },
-    {
-      id: 2,
-      position: "Frontend Developer",
-      company: "Digital Innovations Ltd.",
-      location: "Mumbai, India",
-      employmentType: "Full-time",
-      startDate: "2020-06",
-      endDate: "2021-12",
-      currentJob: false,
-      description: "Developed responsive web applications using modern JavaScript frameworks and collaborated with design teams to implement pixel-perfect UI components.",
-      responsibilities: ["Frontend development", "UI/UX implementation", "Cross-browser compatibility", "Code optimization"],
-      achievements: ["Reduced page load time by 35%", "Built 15+ reusable components"],
-      skills: ["React", "JavaScript", "CSS3", "Bootstrap"]
-    }
-  ]);
-
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+  const [experienceList, setExperienceList] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  
   const [formData, setFormData] = useState({
     position: '',
     company: '',
@@ -51,7 +31,7 @@ const ExperienceSection = () => {
 
   const employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Freelance', 'Internship'];
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormData({
       position: '',
       company: '',
@@ -66,22 +46,24 @@ const ExperienceSection = () => {
       skills: ''
     });
     setEditingId(null);
-  };
+  }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
+      ...(name === 'currentJob' && checked && { endDate: '' }) // Clear end date if current job is checked
     }));
-  };
+  }, []);
 
-  const handleSubmit = () => {
-    if (!formData.position || !formData.company) {
-      alert('Please fill in position and company name');
+  const handleSubmit = useCallback(async () => {
+    if (!formData.position || !formData.company || !formData.startDate) {
+      alert('Please fill in required fields: position, company name, and start date');
       return;
     }
 
+    setSubmitLoading(true);
     const experienceData = {
       ...formData,
       responsibilities: formData.responsibilities.split('\n').filter(item => item.trim()),
@@ -89,56 +71,82 @@ const ExperienceSection = () => {
       skills: formData.skills.split(',').map(skill => skill.trim()).filter(skill => skill)
     };
 
-    if (editingId) {
-      setExperienceList(prev => 
-        prev.map(exp => 
-          exp.id === editingId 
-            ? { ...experienceData, id: editingId }
-            : exp
-        )
-      );
-    } else {
-      const newExperience = {
-        ...experienceData,
-        id: Date.now()
-      };
-      setExperienceList(prev => [newExperience, ...prev]);
+    try {
+      if (editingId) {
+        // Update existing experience
+        const updatedExperience = await dispatch(updateExperience(editingId, experienceData));
+        setExperienceList(prev => 
+          prev.map(exp => 
+            exp.id === editingId || exp._id === editingId
+              ? { ...experienceData, id: editingId, _id: editingId }
+              : exp
+          )
+        );
+      } else {
+        // Add new experience
+        const response = await dispatch(addExperience(experienceData));
+        const newExperience = {
+          ...experienceData,
+          id: response.data?.id || Date.now(),
+          _id: response.data?._id || Date.now()
+        };
+        setExperienceList(prev => [newExperience, ...prev]);
+      }
+      
+      resetForm();
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error('Error saving experience:', error);
+      alert('Failed to save experience');
+    } finally {
+      setSubmitLoading(false);
     }
+  }, [formData, editingId, dispatch, resetForm]);
 
-    resetForm();
-    setIsFormOpen(false);
-  };
-
-  const handleEdit = (experience) => {
+  const handleEdit = useCallback((experience) => {
     setFormData({
-      position: experience.position,
-      company: experience.company,
-      location: experience.location,
-      employmentType: experience.employmentType,
-      startDate: experience.startDate,
-      endDate: experience.endDate,
-      currentJob: experience.currentJob,
-      description: experience.description,
-      responsibilities: Array.isArray(experience.responsibilities) ? experience.responsibilities.join('\n') : experience.responsibilities,
-      achievements: Array.isArray(experience.achievements) ? experience.achievements.join('\n') : experience.achievements,
-      skills: Array.isArray(experience.skills) ? experience.skills.join(', ') : experience.skills
+      position: experience.position || '',
+      company: experience.company || '',
+      location: experience.location || '',
+      employmentType: experience.employmentType || 'Full-time',
+      startDate: experience.startDate || '',
+      endDate: experience.endDate || '',
+      currentJob: experience.currentJob || false,
+      description: experience.description || '',
+      responsibilities: Array.isArray(experience.responsibilities) 
+        ? experience.responsibilities.join('\n') 
+        : experience.responsibilities || '',
+      achievements: Array.isArray(experience.achievements) 
+        ? experience.achievements.join('\n') 
+        : experience.achievements || '',
+      skills: Array.isArray(experience.skills) 
+        ? experience.skills.join(', ') 
+        : experience.skills || ''
     });
-    setEditingId(experience.id);
+    setEditingId(experience.id || experience._id);
     setIsFormOpen(true);
-  };
+  }, []);
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this experience?')) {
-      setExperienceList(prev => prev.filter(exp => exp.id !== id));
+  const handleDelete = useCallback(async (id) => {
+    if (!window.confirm('Are you sure you want to delete this experience?')) return;
+    
+    try {
+      await dispatch(deleteExperience(id));
+      setExperienceList(prev => prev.filter(exp => 
+        (exp.id || exp._id) !== id
+      ));
+    } catch (error) {
+      console.error('Error deleting experience:', error);
+      alert('Failed to delete experience');
     }
-  };
+  }, [dispatch]);
 
-  const openForm = () => {
+  const openForm = useCallback(() => {
     resetForm();
     setIsFormOpen(true);
-  };
+  }, [resetForm]);
 
-  const calculateDuration = (startDate, endDate, currentJob) => {
+  const calculateDuration = useCallback((startDate, endDate, currentJob) => {
     if (!startDate) return '';
     
     const start = new Date(startDate + '-01');
@@ -155,13 +163,50 @@ const ExperienceSection = () => {
     } else {
       return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
     }
-  };
+  }, []);
 
-  const formatDate = (dateString) => {
+  const formatDate = useCallback((dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString + '-01');
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  }, []);
+
+  const fetchExperience = useCallback(async () => {
+    if (!token) return;
+    
+    setLoading(true);
+    try {
+      const response = await dispatch(getExperience(token));
+      if (response?.data?.success) {
+        const experiences = response.data.experience || response.data.experiences || [];
+        setExperienceList(Array.isArray(experiences) ? experiences : []);
+      }
+    } catch (error) {
+      console.error('Error fetching experience:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [token, dispatch]);
+
+  useEffect(() => {
+    fetchExperience();
+  }, [fetchExperience]);
+
+  const getCurrentDate = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   };
+
+  if (loading && experienceList.length === 0) {
+    return (
+      <div className="w-full max-w-7xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+        <div className="flex items-center justify-center py-16">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          <span className="ml-4 text-gray-600">Loading experiences...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
@@ -178,11 +223,11 @@ const ExperienceSection = () => {
         </div>
         <button
           onClick={openForm}
-          className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base w-full sm:w-auto justify-center"
+          disabled={loading}
+          className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base w-full sm:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="sm:hidden">Add Experience</span>
-          <span className="hidden sm:inline">Add Experience</span>
+          <span>Add Experience</span>
         </button>
       </div>
 
@@ -262,20 +307,22 @@ const ExperienceSection = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <div>
                 <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  Start Date
+                  Start Date *
                 </label>
                 <input
                   type="month"
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleInputChange}
+                  max={getCurrentDate()}
                   className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base"
+                  required
                 />
               </div>
               
               <div>
                 <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  End Date
+                  End Date {!formData.currentJob && '*'}
                 </label>
                 <input
                   type="month"
@@ -283,6 +330,8 @@ const ExperienceSection = () => {
                   value={formData.endDate}
                   onChange={handleInputChange}
                   disabled={formData.currentJob}
+                  max={getCurrentDate()}
+                  min={formData.startDate}
                   className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:bg-gray-100 text-sm sm:text-base"
                 />
                 <label className="flex items-center mt-2 sm:mt-3">
@@ -357,12 +406,24 @@ const ExperienceSection = () => {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
               <button
                 onClick={handleSubmit}
-                className="bg-gradient-to-r from-green-600 to-emerald-700 text-white px-6 py-3 rounded-lg sm:rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold text-sm sm:text-base order-2 sm:order-1"
+                disabled={submitLoading}
+                className="bg-gradient-to-r from-green-600 to-emerald-700 text-white px-6 py-3 rounded-lg sm:rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold text-sm sm:text-base order-2 sm:order-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {editingId ? 'Update Experience' : 'Add Experience'}
+                {submitLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    {editingId ? 'Updating...' : 'Adding...'}
+                  </>
+                ) : (
+                  <>
+                  
+                    {editingId ? 'Update Experience' : 'Add Experience'}
+                  </>
+                )}
               </button>
               <button
                 onClick={() => setIsFormOpen(false)}
+                disabled={submitLoading}
                 className="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg sm:rounded-xl hover:bg-gray-300 transition-all duration-200 font-semibold text-sm sm:text-base order-1 sm:order-2"
               >
                 Cancel
@@ -390,7 +451,7 @@ const ExperienceSection = () => {
           </div>
         ) : (
           experienceList.map((experience) => (
-            <div key={experience.id} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100">
+            <div key={experience.id || experience._id} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4 sm:mb-6">
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
@@ -437,7 +498,7 @@ const ExperienceSection = () => {
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(experience.id)}
+                    onClick={() => handleDelete(experience.id || experience._id)}
                     className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                     title="Delete"
                   >
