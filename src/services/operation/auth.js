@@ -45,7 +45,7 @@ export function signUp(
             return response.data.success
         } catch (error) {
             console.log("SIGNUP API ERROR............", error)
-            toast.error("Signup Failed")
+            toast.error(error.response.data.message)
             return false
         } finally {
             dispatch(setLoading(false))

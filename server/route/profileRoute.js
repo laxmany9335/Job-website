@@ -35,9 +35,9 @@ router.put("/update-profile", auth, updateProfile);
 router.get("/my-profile", auth, getProfile);
 
 // Experience Routes
-router.post("/experience", auth, addExperience);
+router.post("/add-experience", auth, addExperience);
 router.put("/experience/:id", auth, updateExperience);
-router.get("/experience", auth, getExperience);
+router.get("/get-experience", auth, getExperience);
 router.delete("/experience/:id", auth, deleteExperience);
 
 // Education Routes

@@ -60,6 +60,18 @@ const sendotp = async (req, res) => {
     }
 };
 
+// const isExistingUser = async (email, phone) => {
+//     try {
+//         const user = await User.findOne({
+//             $or: [{ email }, { mobileNumber: phone }]
+//         });
+//         return user !== null;
+//     } catch (error) {
+//         console.error("Error checking existing user:", error);
+//         throw new Error("Database error");
+//     }
+// };
+
 // ===================== SIGNUP =====================
 const signup = async (req, res) => {
     try {
@@ -128,13 +140,11 @@ const signup = async (req, res) => {
         }
 
         // Check if user already exists
-        const existingUser = await User.findOne({ 
-            $or: [{ email }, { mobileNumber: phone }] 
-        });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
                 success: false,
-                message: "User with this email or phone number already exists",
+                message: "User already exists",
             });
         }
 
@@ -206,8 +216,6 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { mobileOrEmail, password } = req.body;
-        console.log("Login attempt for:", mobileOrEmail);
-        
         if (!mobileOrEmail || !password) {
             return res.status(400).json({
                 success: false,
@@ -223,7 +231,7 @@ const login = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: "User not found. Please check your credentials or sign up",
+                message: "User not found. Please First sign up",
             });
         }
 
@@ -247,7 +255,7 @@ const login = async (req, res) => {
         // Generate JWT token
         const token = jwt.sign(
             {
-                email: user.email,
+                email: user.email || user.mobileNumber,
                 id: user._id,
                 accountType: user.accountType,
             },
@@ -407,5 +415,4 @@ const changePassword = async (req, res) => {
         });
     }
 };
-
 export { sendotp, signup, login, logout, changePassword };
