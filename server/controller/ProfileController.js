@@ -177,40 +177,40 @@ const addExperience = async (req, res) => {
     const userId = req.user?.id;
     const { 
       position, 
-      company, 
+      companyName, 
       location, 
       employmentType, 
       startDate, 
       endDate, 
-      currentJob, 
-      description, 
-      responsibilities, 
-      achievements, 
-      skills 
+      currentlyWorking, 
+      jobDescription, 
+      keyResponsibilities, 
+      keyAchievements, 
+      skillsUsed 
     } = req.body;
 
-    if (!position || !company || !location || !employmentType || !startDate) {
+    if (!position || !companyName || !location || !employmentType || !startDate) {
       return res.status(400).json({
         success: false,
         message: "Please fill all required fields",
       });
     }
-    console.log(position, company, location, employmentType, startDate, endDate, currentJob, description, responsibilities, achievements, skills);
+    console.log(position, companyName, location, employmentType, startDate, endDate, currentlyWorking, jobDescription, keyResponsibilities, keyAchievements, skillsUsed);
     const existUser = await findUserById(userId);
 
     const experience = await Experience.create({
       user: userId,
       position,
-      companyName: company,
+      companyName,
       location,
       employmentType,
       startDate,
       endDate: endDate || null,
-      currentlyWorking: currentJob || false,
-      jobDescription: description || "",
-      keyResponsibilities: responsibilities || [],
-      keyAchievements: achievements || [],
-      skillsUsed: skills || [],
+      currentlyWorking,
+      jobDescription: jobDescription || "",
+      keyResponsibilities: keyResponsibilities || [],
+      keyAchievements: keyAchievements || [],
+      skillsUsed: skillsUsed || [],
     });
 
     if (!existUser.experience) existUser.experience = [];

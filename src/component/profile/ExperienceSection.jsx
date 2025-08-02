@@ -17,16 +17,16 @@ const ExperienceSection = () => {
   
   const [formData, setFormData] = useState({
     position: '',
-    company: '',
+    companyName: '', // Fixed: was 'company', now matches API
     location: '',
     employmentType: 'Full-time',
     startDate: '',
     endDate: '',
-    currentJob: false,
-    description: '',
-    responsibilities: '',
-    achievements: '',
-    skills: ''
+    currentlyWorking: false, // Fixed: was 'currentJob', now matches API
+    jobDescription: '', // Fixed: was 'description', now matches API
+    keyResponsibilities: '', // Fixed: was 'responsibilities', now matches API
+    keyAchievements: '', // Fixed: was 'achievements', now matches API
+    skillsUsed: '' // Fixed: was 'skills', now matches API
   });
 
   const employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Freelance', 'Internship'];
@@ -34,16 +34,16 @@ const ExperienceSection = () => {
   const resetForm = useCallback(() => {
     setFormData({
       position: '',
-      company: '',
+      companyName: '',
       location: '',
       employmentType: 'Full-time',
       startDate: '',
       endDate: '',
-      currentJob: false,
-      description: '',
-      responsibilities: '',
-      achievements: '',
-      skills: ''
+      currentlyWorking: false,
+      jobDescription: '',
+      keyResponsibilities: '',
+      keyAchievements: '',
+      skillsUsed: ''
     });
     setEditingId(null);
   }, []);
@@ -53,23 +53,38 @@ const ExperienceSection = () => {
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
-      ...(name === 'currentJob' && checked && { endDate: '' }) // Clear end date if current job is checked
+      ...(name === 'currentlyWorking' && checked && { endDate: '' }) // Clear end date if current job is checked
     }));
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (!formData.position || !formData.company || !formData.startDate) {
+    if (!formData.position || !formData.companyName || !formData.startDate) {
       alert('Please fill in required fields: position, company name, and start date');
       return;
     }
 
     setSubmitLoading(true);
+    
+    // Prepare data with correct structure for API
     const experienceData = {
-      ...formData,
-      responsibilities: formData.responsibilities.split('\n').filter(item => item.trim()),
-      achievements: formData.achievements.split('\n').filter(item => item.trim()),
-      skills: formData.skills.split(',').map(skill => skill.trim()).filter(skill => skill)
+      position: formData.position,
+      companyName: formData.companyName,
+      location: formData.location,
+      employmentType: formData.employmentType,
+      startDate: formData.startDate,
+      endDate: formData.currentlyWorking ? null : formData.endDate,
+      currentlyWorking: formData.currentlyWorking,
+      jobDescription: formData.jobDescription,
+      keyResponsibilities: formData.keyResponsibilities ? 
+        formData.keyResponsibilities.split('\n').filter(item => item.trim()) : [],
+      keyAchievements: formData.keyAchievements ? 
+        formData.keyAchievements.split('\n').filter(item => item.trim()) : [],
+      skillsUsed: formData.skillsUsed ? 
+        formData.skillsUsed.split(',').map(skill => skill.trim()).filter(skill => skill) : []
     };
+
+    // Debug: Log the data being sent
+    console.log('Sending experience data:', experienceData);
 
     try {
       if (editingId) {
@@ -77,8 +92,8 @@ const ExperienceSection = () => {
         const updatedExperience = await dispatch(updateExperience(editingId, experienceData));
         setExperienceList(prev => 
           prev.map(exp => 
-            exp.id === editingId || exp._id === editingId
-              ? { ...experienceData, id: editingId, _id: editingId }
+            exp._id === editingId
+              ? { ...experienceData, _id: editingId }
               : exp
           )
         );
@@ -87,7 +102,6 @@ const ExperienceSection = () => {
         const response = await dispatch(addExperience(experienceData));
         const newExperience = {
           ...experienceData,
-          id: response.data?.id || Date.now(),
           _id: response.data?._id || Date.now()
         };
         setExperienceList(prev => [newExperience, ...prev]);
@@ -97,7 +111,8 @@ const ExperienceSection = () => {
       setIsFormOpen(false);
     } catch (error) {
       console.error('Error saving experience:', error);
-      alert('Failed to save experience');
+      console.error('Error response:', error.response?.data);
+      alert(error.response?.data?.message || 'Failed to save experience');
     } finally {
       setSubmitLoading(false);
     }
@@ -106,24 +121,24 @@ const ExperienceSection = () => {
   const handleEdit = useCallback((experience) => {
     setFormData({
       position: experience.position || '',
-      company: experience.company || '',
+      companyName: experience.companyName || '',
       location: experience.location || '',
       employmentType: experience.employmentType || 'Full-time',
       startDate: experience.startDate || '',
       endDate: experience.endDate || '',
-      currentJob: experience.currentJob || false,
-      description: experience.description || '',
-      responsibilities: Array.isArray(experience.responsibilities) 
-        ? experience.responsibilities.join('\n') 
-        : experience.responsibilities || '',
-      achievements: Array.isArray(experience.achievements) 
-        ? experience.achievements.join('\n') 
-        : experience.achievements || '',
-      skills: Array.isArray(experience.skills) 
-        ? experience.skills.join(', ') 
-        : experience.skills || ''
+      currentlyWorking: experience.currentlyWorking || false,
+      jobDescription: experience.jobDescription || '',
+      keyResponsibilities: Array.isArray(experience.keyResponsibilities) 
+        ? experience.keyResponsibilities.join('\n') 
+        : experience.keyResponsibilities || '',
+      keyAchievements: Array.isArray(experience.keyAchievements) 
+        ? experience.keyAchievements.join('\n') 
+        : experience.keyAchievements || '',
+      skillsUsed: Array.isArray(experience.skillsUsed) 
+        ? experience.skillsUsed.join(', ') 
+        : experience.skillsUsed || ''
     });
-    setEditingId(experience.id || experience._id);
+    setEditingId(experience._id);
     setIsFormOpen(true);
   }, []);
 
@@ -132,9 +147,7 @@ const ExperienceSection = () => {
     
     try {
       await dispatch(deleteExperience(id));
-      setExperienceList(prev => prev.filter(exp => 
-        (exp.id || exp._id) !== id
-      ));
+      setExperienceList(prev => prev.filter(exp => exp._id !== id));
     } catch (error) {
       console.error('Error deleting experience:', error);
       alert('Failed to delete experience');
@@ -146,11 +159,11 @@ const ExperienceSection = () => {
     setIsFormOpen(true);
   }, [resetForm]);
 
-  const calculateDuration = useCallback((startDate, endDate, currentJob) => {
+  const calculateDuration = useCallback((startDate, endDate, currentlyWorking) => {
     if (!startDate) return '';
     
     const start = new Date(startDate + '-01');
-    const end = currentJob ? new Date() : new Date(endDate + '-01');
+    const end = currentlyWorking ? new Date() : new Date(endDate + '-01');
     
     const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
     const years = Math.floor(months / 12);
@@ -209,7 +222,7 @@ const ExperienceSection = () => {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <div className="w-full max-w-7xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 min-h-screen">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 mb-6 md:mb-8">
         <div className="flex items-center gap-2 sm:gap-3">
@@ -262,8 +275,8 @@ const ExperienceSection = () => {
                 </label>
                 <input
                   type="text"
-                  name="company"
-                  value={formData.company}
+                  name="companyName"
+                  value={formData.companyName}
                   onChange={handleInputChange}
                   placeholder="Company/Organization name"
                   className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base"
@@ -322,14 +335,14 @@ const ExperienceSection = () => {
               
               <div>
                 <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  End Date {!formData.currentJob && '*'}
+                  End Date {!formData.currentlyWorking && '*'}
                 </label>
                 <input
                   type="month"
                   name="endDate"
                   value={formData.endDate}
                   onChange={handleInputChange}
-                  disabled={formData.currentJob}
+                  disabled={formData.currentlyWorking}
                   max={getCurrentDate()}
                   min={formData.startDate}
                   className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:bg-gray-100 text-sm sm:text-base"
@@ -337,8 +350,8 @@ const ExperienceSection = () => {
                 <label className="flex items-center mt-2 sm:mt-3">
                   <input
                     type="checkbox"
-                    name="currentJob"
-                    checked={formData.currentJob}
+                    name="currentlyWorking"
+                    checked={formData.currentlyWorking}
                     onChange={handleInputChange}
                     className="mr-2 w-4 h-4 text-green-600 rounded focus:ring-green-500"
                   />
@@ -352,8 +365,8 @@ const ExperienceSection = () => {
                 Job Description
               </label>
               <textarea
-                name="description"
-                value={formData.description}
+                name="jobDescription"
+                value={formData.jobDescription}
                 onChange={handleInputChange}
                 placeholder="Brief description of your role and work..."
                 rows="3"
@@ -366,8 +379,8 @@ const ExperienceSection = () => {
                 Key Responsibilities
               </label>
               <textarea
-                name="responsibilities"
-                value={formData.responsibilities}
+                name="keyResponsibilities"
+                value={formData.keyResponsibilities}
                 onChange={handleInputChange}
                 placeholder="List your key responsibilities (one per line)"
                 rows="4"
@@ -380,8 +393,8 @@ const ExperienceSection = () => {
                 Key Achievements
               </label>
               <textarea
-                name="achievements"
-                value={formData.achievements}
+                name="keyAchievements"
+                value={formData.keyAchievements}
                 onChange={handleInputChange}
                 placeholder="List your key achievements (one per line)"
                 rows="3"
@@ -395,8 +408,8 @@ const ExperienceSection = () => {
               </label>
               <input
                 type="text"
-                name="skills"
-                value={formData.skills}
+                name="skillsUsed"
+                value={formData.skillsUsed}
                 onChange={handleInputChange}
                 placeholder="React, Node.js, Python (comma separated)"
                 className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base"
@@ -416,7 +429,6 @@ const ExperienceSection = () => {
                   </>
                 ) : (
                   <>
-                  
                     {editingId ? 'Update Experience' : 'Add Experience'}
                   </>
                 )}
@@ -451,12 +463,12 @@ const ExperienceSection = () => {
           </div>
         ) : (
           experienceList.map((experience) => (
-            <div key={experience.id || experience._id} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100">
+            <div key={experience._id} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4 sm:mb-6">
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
                     <h3 className="text-lg sm:text-xl font-bold text-gray-900 break-words">{experience.position}</h3>
-                    {experience.currentJob && (
+                    {experience.currentlyWorking && (
                       <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 sm:px-3 py-1 rounded-full self-start">
                         Current
                       </span>
@@ -465,7 +477,7 @@ const ExperienceSection = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-600 mb-3">
                     <div className="flex items-center gap-2">
                       <Building className="w-4 h-4 flex-shrink-0" />
-                      <span className="font-medium break-words">{experience.company}</span>
+                      <span className="font-medium break-words">{experience.companyName}</span>
                     </div>
                     {experience.location && (
                       <div className="flex items-center gap-2">
@@ -478,11 +490,11 @@ const ExperienceSection = () => {
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 flex-shrink-0" />
                       <span>
-                        {formatDate(experience.startDate)} - {experience.currentJob ? 'Present' : formatDate(experience.endDate)}
+                        {formatDate(experience.startDate)} - {experience.currentlyWorking ? 'Present' : formatDate(experience.endDate)}
                       </span>
                     </div>
                     <span className="text-gray-300 hidden sm:inline">•</span>
-                    <span>{calculateDuration(experience.startDate, experience.endDate, experience.currentJob)}</span>
+                    <span>{calculateDuration(experience.startDate, experience.endDate, experience.currentlyWorking)}</span>
                     <span className="text-gray-300 hidden sm:inline">•</span>
                     <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium self-start">
                       {experience.employmentType}
@@ -498,7 +510,7 @@ const ExperienceSection = () => {
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(experience.id || experience._id)}
+                    onClick={() => handleDelete(experience._id)}
                     className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                     title="Delete"
                   >
@@ -507,19 +519,19 @@ const ExperienceSection = () => {
                 </div>
               </div>
 
-              {experience.description && (
-                <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6 leading-relaxed">{experience.description}</p>
+              {experience.jobDescription && (
+                <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6 leading-relaxed">{experience.jobDescription}</p>
               )}
 
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
-                {experience.responsibilities && experience.responsibilities.length > 0 && (
+                {experience.keyResponsibilities && experience.keyResponsibilities.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
                       <Users className="w-4 h-4 text-blue-600 flex-shrink-0" />
                       Key Responsibilities
                     </h4>
                     <ul className="space-y-2">
-                      {experience.responsibilities.map((responsibility, index) => (
+                      {experience.keyResponsibilities.map((responsibility, index) => (
                         <li key={index} className="text-sm sm:text-base text-gray-700 flex items-start gap-2">
                           <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
                           <span className="break-words">{responsibility}</span>
@@ -529,14 +541,14 @@ const ExperienceSection = () => {
                   </div>
                 )}
 
-                {experience.achievements && experience.achievements.length > 0 && (
+                {experience.keyAchievements && experience.keyAchievements.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
                       <Award className="w-4 h-4 text-green-600 flex-shrink-0" />
                       Key Achievements
                     </h4>
                     <ul className="space-y-2">
-                      {experience.achievements.map((achievement, index) => (
+                      {experience.keyAchievements.map((achievement, index) => (
                         <li key={index} className="text-sm sm:text-base text-gray-700 flex items-start gap-2">
                           <span className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
                           <span className="break-words">{achievement}</span>
@@ -547,11 +559,11 @@ const ExperienceSection = () => {
                 )}
               </div>
 
-              {experience.skills && experience.skills.length > 0 && (
+              {experience.skillsUsed && experience.skillsUsed.length > 0 && (
                 <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-100">
                   <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Skills Used</h4>
                   <div className="flex flex-wrap gap-2">
-                    {experience.skills.map((skill, index) => (
+                    {experience.skillsUsed.map((skill, index) => (
                       <span key={index} className="bg-gray-100 text-gray-800 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-200 transition-colors break-words">
                         {skill}
                       </span>
