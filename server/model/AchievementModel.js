@@ -6,24 +6,23 @@ const achievementSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  achievementTitle: {
+  title: {
     type: String,
     required: true,
     trim: true,
   },
   organization: {
     type: String,
-    required: true,
     trim: true,
   },
   category: {
     type: String,
     required: true,
     trim: true,
-    enum: ['Academic', 'Professional', 'Leadership', 'Innovation', 'Other']
+    enum: ['Academic', 'Professional','Leadership','Technical','Sports','Volunteer','Creative','Research','Awards','Certifications','Other']
   },
-  dateAchieved: {
-    type: Date,
+  date: {
+    type: String,
     required: true,
   },
   description: {
@@ -34,7 +33,7 @@ const achievementSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  relatedSkills: [
+  skills: [
     {
       type: String,
       trim: true,

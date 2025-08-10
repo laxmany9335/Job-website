@@ -6,7 +6,7 @@ const projectSchema = new mongoose.Schema({
     ref: "User", 
     required: true,
   },
-  projectTitle: {
+  title: {
     type: String,
     required: true,
     trim: true,
@@ -16,38 +16,60 @@ const projectSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  technologiesUsed: {
+  technologies: {
     type: [String],
-    required: true,
+    default: [],
   },
-  yourRole: {
+  role: {
     type: String,
-    required: true,
     trim: true,
+    default: '',
   },
   startDate: {
     type: Date, 
-    required: true,
   },
   endDate: {
     type: Date,
-    required: true,
   },
   status: {
     type: String,
-    enum: ['Completed', 'In Progress', 'On Hold'],
-    required: true,
+    enum: ['Completed', 'In Progress', 'On Hold', 'Cancelled'],
+    default: 'In Progress',
   },
   liveUrl: {
     type: String,
     trim: true,
+    default: '',
   },
   githubUrl: {
     type: String,
     trim: true,
+    default: '',
   },
+  currentlyWorking: {
+    type: Boolean,
+    default: false,
+  }
 }, {
   timestamps: true
+});
+
+// Add validation to ensure endDate is after startDate when both are provided
+projectSchema.pre('save', function(next) {
+  if (this.startDate && this.endDate && this.endDate < this.startDate) {
+    next(new Error('End date must be after start date'));
+  } else {
+    next();
+  }
+});
+
+// If currently working, endDate should be null and status should be 'In Progress'
+projectSchema.pre('save', function(next) {
+  if (this.currentlyWorking) {
+    this.endDate = null;
+    this.status = 'In Progress';
+  }
+  next();
 });
 
 const Project = mongoose.model("Project", projectSchema);

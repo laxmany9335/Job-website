@@ -2,17 +2,17 @@ import toast from 'react-hot-toast'
 import { apiConnector } from '../../apiConnector'
 import { setLoading } from "../../../slice/authSlice";
 import { profileEndpoints } from '../../apis'
-const { DELETE_ACHIEVEMENTS } = profileEndpoints;
+const { DELETE_ACHIEVEMENT } = profileEndpoints;
 
-export function deleteAchievements(formData) {
+export function deleteAchievement(achievementId) {
     return async (dispatch) => {
-        const toastId = toast.loading("Deleting Achievements...");
-        console.log("first", formData, "formData in deleteAchievements function");
+         const toastId = toast.loading("Deleting Achievements...");
+    
         dispatch(setLoading(true));
         try {
-            console.log("second")
-           const response = await apiConnector("POST", DELETE_ACHIEVEMENTS, formData);
+           const response = await apiConnector("DELETE", DELETE_ACHIEVEMENT, { achievementId });
 
+            
             if (!response.data.success) {
                 throw new Error(response.data.message);
             }

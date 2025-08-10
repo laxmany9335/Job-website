@@ -17,12 +17,12 @@ export function addAchievement(formData) {
                 throw new Error(response.data.message);
             }
 
-            toast.success("Education Added Successfully");
-            console.log(response, "ADD_EDUCATION API RESPONSE............");
+            toast.success("Achievement Added Successfully");
+            console.log(response, "ADD_ACHIEVEMENT API RESPONSE............");
             return response.data.success;
         } catch (error) {
-            toast.error(error.message || "Failed to Add Education");
-            console.error("Error adding education:", error);
+            toast.error(error.message || "Failed to Add Achievement");
+            console.error("Error adding Achievement:", error);
             return false;
         } finally {
             dispatch(setLoading(false));

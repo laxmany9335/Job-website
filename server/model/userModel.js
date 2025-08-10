@@ -62,10 +62,10 @@ const userSchema = new mongoose.Schema(
         ref: "Education",
       }
     ],
-    workExperience: [
+    JobExperience: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "WorkExperience",
+        ref: "JobExperience",
       }
     ],
     projects: [
