@@ -2,14 +2,14 @@ import toast from 'react-hot-toast'
 import { apiConnector } from '../../apiConnector'
 import { setLoading } from "../../../slice/authSlice";
 import { profileEndpoints } from '../../apis'
-const { GET_EXPERIENCE } = profileEndpoints;
+const { GET_PROJECTS } = profileEndpoints;
 
-export function getExperience(token) {
+export function getProject(token) {
     return async (dispatch) => {
-        const toastId = toast.loading("Fetching Experience...");
+        const toastId = toast.loading("Fetching Project...");
         dispatch(setLoading(true));
         try {
-            const response = await apiConnector("GET", GET_EXPERIENCE,
+            const response = await apiConnector("GET", GET_PROJECTS,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -18,12 +18,12 @@ export function getExperience(token) {
                 throw new Error(response.data.message);
             }
 
-            toast.success("Experience Fetched Successfully");
-            console.log(response, "GET_EXPERIENCE API RESPONSE............");
+            toast.success("Project Fetched Successfully");
+            console.log(response, "GET_PROJECTS API RESPONSE............");
             return response;
         } catch (error) {
-            toast.error(error.message || "Failed to Fetch get experience");
-            console.error("Error fetching experience:", error);
+            toast.error(error.message || "Failed to Fetch get Project");
+            console.error("Error fetching Project:", error);
             return false;
         } finally {
             dispatch(setLoading(false));

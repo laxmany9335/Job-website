@@ -4,14 +4,14 @@ import { setLoading } from "../../../slice/authSlice";
 import { profileEndpoints } from '../../apis'
 const { DELETE_EDUCATION } = profileEndpoints;
 
-export function deleteEducation(formData) {
+export function deleteEducation(educationId) {
     return async (dispatch) => {
         const toastId = toast.loading("Deleting Education...");
-        console.log("first", formData, "formData in deleteEducation function");
+        console.log("first", educationId, " Education By ID");
         dispatch(setLoading(true));
         try {
             console.log("second")
-           const response = await apiConnector("POST", DELETE_EDUCATION, formData);
+           const response = await apiConnector("DELETE", DELETE_EDUCATION, { educationId });
 
             if (!response.data.success) {
                 throw new Error(response.data.message);
@@ -22,7 +22,7 @@ export function deleteEducation(formData) {
             return response.data.success;
         } catch (error) {
             toast.error(error.message || "Failed to Delete Education");
-            console.error("Error deleting education:", error);
+            console.error("Error deleting Education:", error);
             return false;
         } finally {
             dispatch(setLoading(false));

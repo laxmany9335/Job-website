@@ -4,14 +4,14 @@ import { setLoading } from "../../../slice/authSlice";
 import { profileEndpoints } from '../../apis'
 const { DELETE_EXPERIENCE } = profileEndpoints;
 
-export function deleteExperience(formData) {
+export function deleteExperience(experienceId) {
     return async (dispatch) => {
         const toastId = toast.loading("Deleting Experience...");
-        console.log("first", formData, "formData in deleteExperience function");
+        console.log("first", experienceId, "formData in deleteExperience function");
         dispatch(setLoading(true));
         try {
             console.log("second")
-           const response = await apiConnector("POST", DELETE_EXPERIENCE, formData);
+           const response = await apiConnector("DELETE", DELETE_EXPERIENCE, { experienceId });
 
             if (!response.data.success) {
                 throw new Error(response.data.message);

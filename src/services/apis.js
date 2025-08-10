@@ -21,9 +21,9 @@ export const profileEndpoints = {
 
   // Education
   ADD_EDUCATION: BASE_URL + "/profile/add-education",
-  GET_EDUCATION: BASE_URL + "/users/profile/education",
-  UPDATE_EDUCATION: BASE_URL + "/users/profile/education/update",
-
+  GET_EDUCATION: BASE_URL + "/profile/education",
+  UPDATE_EDUCATION: BASE_URL + "/profile/education",
+  DELETE_EDUCATION: BASE_URL + "/profile/education/delete",
   // Skills
   UPDATE_SKILLS: BASE_URL + "/users/profile/update-skills",
 
@@ -33,12 +33,18 @@ export const profileEndpoints = {
   // Experience
   ADD_EXPERIENCE: BASE_URL + "/profile/add-experience",
   GET_EXPERIENCE: BASE_URL + "/profile/get-experience",
-  UPDATE_EXPERIENCE: BASE_URL + "/users/profile/experience/update",
-  DELETE_EXPERIENCE: BASE_URL + "/users/profile/experience/delete",
+  UPDATE_EXPERIENCE: BASE_URL + "/profile/experience",
+  DELETE_EXPERIENCE: BASE_URL + "/profile/experience/delete",
 
   // Projects
   ADD_PROJECT: BASE_URL + "/profile/add-project",
-  GET_PROJECTS: BASE_URL + "/users/profile/projects",
-  UPDATE_PROJECT: BASE_URL + "/users/profile/project/update",
-  DELETE_PROJECT: BASE_URL + "/users/profile/project/delete",
+  GET_PROJECTS: BASE_URL + "/profile/get-projects",
+  UPDATE_PROJECT: BASE_URL + "/profile/project",
+  DELETE_PROJECT: BASE_URL + "/profile/project/delete",
+
+  //Achievement Section
+  ADD_ACHIEVEMENT: BASE_URL + "/profile/add-achievement",
+  GET_ACHIEVEMENT: BASE_URL + "/profile/get-achievements",
+  UPDATE_ACHIEVEMENT: BASE_URL + "/profile/achievement",
+  DELETE_ACHIEVEMENT: BASE_URL + "/profile/achievement/delete"
 }

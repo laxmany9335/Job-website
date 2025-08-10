@@ -27,12 +27,16 @@ const educationSchema = new mongoose.Schema({
     trim: true,
   },
   startYear: {
-    type: Number,
-    required: true,
+    type: String,
+    default: null,
   },
   endYear: {
-    type: Number, 
-    required: true,
+    type: String, 
+    default: null,
+  },
+  currentlyStudying: {
+    type: Boolean,
+    default: false,
   },
   grade: {
     type: String,

@@ -89,7 +89,7 @@ const ExperienceSection = () => {
     try {
       if (editingId) {
         // Update existing experience
-        const updatedExperience = await dispatch(updateExperience(editingId, experienceData));
+        const updatedExperience = await dispatch(updateExperience(experienceData, editingId ));
         setExperienceList(prev => 
           prev.map(exp => 
             exp._id === editingId
