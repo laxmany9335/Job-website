@@ -34,6 +34,7 @@ const authSlice = createSlice({
             // Sync with localStorage
             if (action.payload) {
                 localStorage.setItem("token", JSON.stringify(action.payload));
+                Cookies.set("token", action.payload, { expires: 3, secure: true, sameSite: "Strict" });
             } else {
                 localStorage.removeItem("token");
             }

@@ -268,15 +268,12 @@ const login = async (req, res) => {
         // Remove password from user object
         const { password: _, ...userData } = user.toObject();
 
-        // Set cookie
-        res.cookie("token", token, {
+
+        return res.status(200).cookie("token", token, {
             httpOnly: true,
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-        });
-
-        return res.status(200).json({
+            secure: true,
+        }).json({
             success: true,
             token,
             user: userData,
