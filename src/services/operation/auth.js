@@ -1,8 +1,8 @@
 import toast from 'react-hot-toast'
 import { apiConnector } from '../apiConnector'
-import { setLoading, setToken } from "../../slice/authSlice";
+import { setToken, setLoading }from "../../slice/authSlice";
 import { endpoints } from '../apis'
-import { Cookie } from 'lucide-react';
+
 
 const { SIGNUP_API, SENDOTP_API, LOGIN_API, LOGOUT_API, RESETPASSTOKEN_API, RESETPASSWORD_API } = endpoints
 
@@ -100,9 +100,7 @@ export function login(mobileOrEmail, password, navigate) {
             
             // Store token in both Redux and localStorage
             const token = response.data.token;
-            dispatch(setToken(token));
-            localStorage.setItem("token", JSON.stringify(token));
-            
+            dispatch(setToken(token)); 
             navigate("/dashboard/my-profile");
             return response.data.success;
         } catch (error) {
