@@ -1,5 +1,6 @@
 // ===================== BASE URL =====================
 const BASE_URL = "https://job-website-wvwi.onrender.com/api/v1"
+                
    
 // ===================== AUTH & USER ENDPOINTS =====================
 export const endpoints = {
