@@ -5,7 +5,6 @@ import Education from '../model/EducationModel.js';
 import Project from "../model/ProjectModel.js";
 import mongoose from 'mongoose';
 import Achievement from '../model/AchievementModel.js';
-import Certification from '../model/CertificationModel.js';
 
 // Helper function for error handling
 const handleError = (res, error, message = "Internal Server Error") => {
@@ -823,7 +822,7 @@ const addAchievements = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Achievement added successfully",
-      achievement,
+      achievement, 
     });
 
   } catch (error) {
@@ -932,11 +931,8 @@ const deleteAchievements = async (req, res) => {
       });
     }
 
-    const existUser = await findUserById(userId);
-    const achievements = await Achievement.findByIdAndDelete(achievementId);
-    // Remove from user's certification array
-     existUser.achievements = existUser.achievements.filter(id => id.toString() !== achievementId);
-     await existUser.save();
+    const achievements = await updateUserArray(userId, 'achievements', 'delete', { id: achievementId });
+
     return res.status(200).json({
       success: true,
       message: "Achievement deleted successfully",
@@ -951,225 +947,6 @@ const deleteAchievements = async (req, res) => {
       });
     }
     return handleError(res, error, "Delete Achievement Error");
-  }
-};
-
-//add Certification 
-const addCertification = async (req, res) => {
-  try {
-    const userId = req.user?.id;
-    const {
-      name,
-      instituteName,
-      credentialId,
-      issueDate,
-      expiryDate,
-      neverExpires,
-      credentialUrl,
-      description,
-      skills,
-      level
-    } = req.body;
-
-    console.log("Certification data:", name, instituteName, credentialId, issueDate, expiryDate, neverExpires, credentialUrl, description, skills, level);
-
-    // Required fields validation
-    if (!name || !instituteName || !issueDate) {
-      return res.status(400).json({
-        success: false,
-        message: "Please fill all required fields: name, institute name, and issue date",
-      });
-    }
-
-    // Find user
-    const existUser = await findUserById(userId);
-
-    // Create certification
-    const certification = await Certification.create({
-      user: userId,
-      name,
-      instituteName,
-      credentialId: credentialId || "",
-      issueDate,
-      expiryDate: neverExpires ? null : expiryDate,
-      neverExpires: neverExpires || false,
-      credentialUrl: credentialUrl || "",
-      description: description || "",
-      skills: Array.isArray(skills) ? skills : [],
-      level: level || ""
-    });
-
-    // Push to user's certification list
-    if (!existUser.certification) existUser.certification = [];
-    existUser.certification.push(certification._id);
-    await existUser.save();
-
-    return res.status(201).json({
-      success: true,
-      message: "Certification added successfully",
-      certification,
-    });
-
-  } catch (error) {
-    if (error.message === 'User not found') {
-      return res.status(404).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    return handleError(res, error, "Add Certification Error");
-  }
-};
-
-// Update Certification
-const updateCertification = async (req, res) => {
-  try {
-    const userId = req.user?.id;
-    const certificationId = req.params.id;
-    const {
-      name,
-      instituteName,
-      credentialId,
-      issueDate,
-      expiryDate,
-      neverExpires,
-      credentialUrl,
-      description,
-      skills,
-      level
-    } = req.body;
-
-    console.log("Updating certification for:", certificationId);
-    console.log("Certification data received:", req.body);
-
-    // Validate certificationId
-    if (!certificationId || !mongoose.Types.ObjectId.isValid(certificationId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid or missing certificationId",
-      });
-    }
-
-    // Validate required fields
-    if (!name || !instituteName || !issueDate) {
-      return res.status(400).json({
-        success: false,
-        message: "Please fill all required fields: name, institute name, and issue date",
-      });
-    }
-
-    // Ensure user exists
-    await findUserById(userId);
-
-    // Update certification
-    const certification = await Certification.findByIdAndUpdate(
-      certificationId,
-      {
-        name,
-        instituteName,
-        credentialId: credentialId || "",
-        issueDate,
-        expiryDate: neverExpires ? null : expiryDate,
-        neverExpires: neverExpires || false,
-        credentialUrl: credentialUrl || "",
-        description: description || "",
-        skills: Array.isArray(skills) ? skills : [],
-        level: level || ""
-      },
-      { new: true, runValidators: true }
-    );
-
-    if (!certification) {
-      return res.status(404).json({
-        success: false,
-        message: "Certification not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Certification updated successfully",
-      certification,
-    });
-
-  } catch (error) {
-    console.error("Update Certification Error:", error);
-
-    if (error.message === 'User not found') {
-      return res.status(404).json({
-        success: false,
-        message: error.message,
-      });
-    }
-
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({
-        success: false,
-        message: "Validation error: " + error.message,
-      });
-    }
-
-    return handleError(res, error, "Update Certification Error");
-  }
-};
-
-// Get Certifications
-const getCertification = async (req, res) => {
-  try {
-    const userId = req.user?.id;
-    console.log("first")
-    const certifications = await Certification.find({ user: userId })
-      .sort({ createdAt: -1 }); // Sort by newest first
-
-    return res.status(200).json({
-      success: true,
-      certification: certifications || [],
-    });
-
-  } catch (error) {
-    return handleError(res, error, "Get Certification Error");
-  }
-};
-
-// Delete Certification
-const deleteCertification = async (req, res) => {
-  try {
-    const userId = req.user?.id;
-    const { certificationId } = req.body;
-    if (!certificationId) {
-      return res.status(400).json({
-        success: false,
-        message: "Certification ID is required",
-      });
-    }
-
-    // Validate certificationId
-    if (!mongoose.Types.ObjectId.isValid(certificationId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid certification ID",
-      });
-    }
-
-    const existUser = await findUserById(userId);
-    const certifications = await Certification.findByIdAndDelete(certificationId);
-    // Remove from user's certification array
-     existUser.certifications = existUser.certifications.filter(id => id.toString() !== certificationId);
-     await existUser.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Certification deleted successfully",
-    });
-
-  } catch (error) {
-    if (error.message === 'User not found') {
-      return res.status(404).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    return handleError(res, error, "Delete Certification Error");
   }
 };
 
@@ -1463,10 +1240,6 @@ export {
   updateAchievements,
   getAchievements,
   deleteAchievements,
-  addCertification,
-  updateCertification,
-  deleteCertification,
-  getCertification,
   addSkills,
   updateSkills,
   getSkills,
