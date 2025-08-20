@@ -6,12 +6,12 @@ const certificationSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  name: {
+  certificationName: {
     type: String,
     required: true,
     trim: true,
   },
-  instituteName: {
+  issuingOrganization: {
     type: String,
     required: true,
     trim: true,
@@ -22,18 +22,19 @@ const certificationSchema = new mongoose.Schema({
   },
   level: {
     type: String,
+    required: true,
     trim: true,
-    enum: ['Beginner', 'Intermediate', 'Advanced']
+    enum: ['Beginner', 'Intermediate', 'Advanced', 'Expert']
   },
   issueDate: {
-    type: String,
+    type: Date,
     required: true,
   },
   expiryDate: {
-    type: String,
+    type: Date,
     default: null,
   },
-  neverExpires: {
+  doesNotExpire: {
     type: Boolean,
     default: false,
   },
@@ -45,12 +46,16 @@ const certificationSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  skills: [
+  skillsValidated: [
     {
       type: String,
       trim: true,
     }
   ],
+  cost: {
+    type: Number,
+    default: 0,
+  }
 }, {
   timestamps: true
 });
