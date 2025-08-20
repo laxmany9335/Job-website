@@ -1,7 +1,7 @@
+// ===================== AUTH & USER ENDPOINTS ===================
 // const BASE_URL = "http://localhost:5000/api/v1"
 const BASE_URL = "https://job-website-wvwi.onrender.com/api/v1";
 
-//User api
 export const endpoints = {
   SENDOTP_API: BASE_URL + "/users/sendotp",
   SIGNUP_API: BASE_URL + "/users/signup",

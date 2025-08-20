@@ -3,7 +3,11 @@ import jwt from "jsonwebtoken";
 // Token Authentication Middleware
 const auth = (req, res, next) => {
   try {
-    const token = req.cookies.token || req.localStronge.token || req.body.token || req.header("Authorization")?.replace("Bearer ", "");
+  const token =
+  req.cookies.token ||
+  req.body.token ||
+  req.header("Authorization")?.replace("Bearer ", "");
+
     if (!token) {
       return res.status(401).json({ message: "Access Denied. No token provided." });
     }
