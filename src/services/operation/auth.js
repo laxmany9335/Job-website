@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast'
 import { apiConnector } from '../apiConnector'
-import { setToken, setLoading }from "../../slice/authSlice";
+import { setToken, setLoading, logout as logoutAction } from "../../slice/authSlice";
 import { endpoints } from '../apis'
 
 
@@ -83,49 +83,39 @@ export function sendOtp(email, navigate) {
 }
 
 export function login(mobileOrEmail, password, navigate) {
-    return async (dispatch) => {
-        const toastId = toast.loading("Logging in...");
-        dispatch(setLoading(true));
-        try {
-            const response = await apiConnector("POST", LOGIN_API, {
-                mobileOrEmail,
-                password,
-            });
+  return async (dispatch) => {
+    const toastId = toast.loading("Logging in...");
+    dispatch(setLoading(true));
+    try {
+      const response = await apiConnector("POST", LOGIN_API, { mobileOrEmail, password });
 
-            if (!response.data.success) {
-                throw new Error(response.data.message);
-            }
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
 
-            toast.success("Login Successful");
-            
-            // Store token in both Redux and localStorage
-            const token = response.data.token;
-            dispatch(setToken(token)); 
-            navigate("/dashboard/my-profile");
-            return response.data.success;
-        } catch (error) {
-            toast.error(error.message || "Login Failed");
-            return false;
-        } finally {
-            dispatch(setLoading(false));
-            toast.dismiss(toastId);
-        }
-    };
+      toast.success("Login Successful");
+
+      const token = response.data.token;
+      dispatch(setToken(token));
+      navigate("/dashboard/my-profile");
+
+      return response.data.success;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login Failed");
+      return false;
+    } finally {
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+    }
+  };
 }
 
-export const logout = (token, navigate) => {
-    return async (dispatch) => {
-       
-            toast.success("Logout Successful");
-
-            // Clear user data from both Redux store and localStorage
-            dispatch(setToken(null));
-            localStorage.removeItem("token");
-            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-            // Redirect to login page
-            navigate("/login");
-    };
+export const logout = (navigate) => {
+  return (dispatch) => {
+    toast.success("Logout Successful");
+    dispatch(logoutAction()); // Redux + Cookies clear
+    navigate("/login");
+  };
 };
 
 export function getPasswordResetToken(email, setEmailSent) {

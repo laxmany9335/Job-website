@@ -8,36 +8,31 @@ const initialState = {
   token: Cookies.get("token") || null, 
 };
 
-// Create auth slice
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // Set signup data
     setSignupData(state, action) {
       state.signupData = action.payload;
     },
-    // Set loading state
     setLoading(state, action) {
       state.loading = action.payload;
     },
-    // Set token (e.g., after login/signup)
     setToken(state, action) {
       state.token = action.payload;
-
       if (action.payload) {
-        // Set token in cookie
-        Cookies.set("token", action.payload, { expires: 3, secure: true, sameSite: "Strict" });
+        Cookies.set("token", action.payload, { expires: 7 }); // 7 din ke liye store
       } else {
-        // Remove token from cookie
         Cookies.remove("token");
       }
+    },
+    logout(state) {
+      state.token = null;
+      state.signupData = null;
+      Cookies.remove("token");
     },
   },
 });
 
-// Export actions
-export const { setSignupData, setLoading, setToken } = authSlice.actions;
-
-// Export reducer
+export const { setSignupData, setLoading, setToken, logout } = authSlice.actions;
 export default authSlice.reducer;
